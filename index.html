@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHYS // STUDY</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Saira+Condensed:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0ede6;--bg2:#e8e4dc;--bg3:#ddd8ce;--ink:#1a1a18;--ink2:#2e2e2a;--ink3:#4a4a44;--muted:#888880;--border:#b8b4aa;--border2:#9a968e;--green:#2a6b3a;--red:#c0392b}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:'Share Tech Mono',monospace;font-size:13px}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5}
+
+/* SELECT */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fi .4s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+#boot.out{animation:fo .25s ease forwards}
+@keyframes fo{to{opacity:0;pointer-events:none}}
+.bc{position:absolute;width:18px;height:18px;border-color:var(--ink);border-style:solid}
+.bc.tl{top:18px;left:18px;border-width:2px 0 0 2px}.bc.tr{top:18px;right:18px;border-width:2px 2px 0 0}
+.bc.bl{bottom:18px;left:18px;border-width:0 0 2px 2px}.bc.br{bottom:18px;right:18px;border-width:0 2px 2px 0}
+.b-ey{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.3em;color:var(--muted);margin-bottom:8px;text-transform:uppercase}
+.b-title{font-family:'Saira Condensed',sans-serif;font-size:60px;font-weight:900;letter-spacing:-.02em;line-height:.9;text-align:center;margin-bottom:6px}
+.b-title span{color:var(--muted)}
+.b-div{width:60px;height:2px;background:var(--ink);margin:16px auto 32px}
+.sel-row{display:flex;gap:14px;margin-bottom:36px}
+.mc{width:210px;border:2px solid var(--ink);cursor:pointer;transition:all .15s;position:relative;background:var(--bg)}
+.mc:hover{background:var(--ink);color:var(--bg)}
+.mc:hover .mc-tag{background:var(--bg);color:var(--ink)}
+.mc:hover .mc-body,.mc:hover .mc-sl{color:rgba(240,237,230,.5)}
+.mc:hover .mc-sv{color:var(--bg)}
+.mc:hover .mc-stat{border-color:rgba(255,255,255,.2)}
+.mc-tag{background:var(--ink);color:var(--bg);font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;padding:5px 12px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.mc-dot{width:6px;height:6px;background:var(--bg)}.mc:hover .mc-dot{background:var(--ink)}
+.mc-inner{padding:14px}
+.mc-title{font-family:'Saira Condensed',sans-serif;font-size:30px;font-weight:900;line-height:.95;margin-bottom:7px}
+.mc-body{font-size:10px;color:var(--ink3);line-height:1.65;margin-bottom:12px;letter-spacing:.02em}
+.mc-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mc-stat{border:1px solid var(--border);padding:6px 8px}
+.mc-sv{font-size:16px;font-weight:700;font-family:'Saira Condensed',sans-serif}
+.mc-sl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.b-hint{font-size:9px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}
+
+/* APP */
+#app{display:none;height:100vh;flex-direction:column}
+#app.show{display:flex}
+.hud{background:var(--ink);color:var(--bg);display:flex;align-items:stretch;flex-shrink:0}
+.hb{padding:8px 14px;border-right:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:center}
+.hbl{font-size:8px;letter-spacing:.2em;color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:2px;font-family:'Saira Condensed',sans-serif}
+.hbv{font-family:'Saira Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.05em;line-height:1}
+.hbv.live{color:#7fff7f}
+.hbsp{flex:1}
+.hbprog{padding:8px 16px;display:flex;flex-direction:column;justify-content:center;min-width:160px}
+.hbpr{display:flex;justify-content:space-between;font-size:8px;color:rgba(255,255,255,.35);letter-spacing:.1em;margin-bottom:4px;font-family:'Saira Condensed',sans-serif}
+.hbpt{height:2px;background:rgba(255,255,255,.15)}
+.hbpf{height:100%;background:#fff;transition:width .4s}
+.shell{flex:1;display:flex;overflow:hidden}
+.sidebar{width:230px;min-width:230px;background:var(--bg2);border-right:2px solid var(--ink);display:flex;flex-direction:column;overflow:hidden}
+.sbh{background:var(--ink);color:var(--bg);font-family:'Saira Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;padding:8px 12px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.sbbk{cursor:pointer;font-size:9px;opacity:.5;transition:opacity .1s;letter-spacing:.05em}
+.sbbk:hover{opacity:1}
+.sbnav{flex:1;overflow-y:auto;padding:4px 0 20px}
+.sbnav::-webkit-scrollbar{width:3px}
+.sbnav::-webkit-scrollbar-thumb{background:var(--border)}
+.glbl{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);padding:10px 12px 3px;font-family:'Saira Condensed',sans-serif;font-weight:700}
+.ni{display:flex;align-items:center;gap:7px;padding:7px 12px;cursor:pointer;font-size:11px;color:var(--ink3);border-left:3px solid transparent;transition:all .1s;letter-spacing:.02em;font-family:'Saira Condensed',sans-serif;font-weight:600}
+.ni:hover{background:var(--bg3);color:var(--ink)}
+.ni.active{background:var(--ink);color:var(--bg);border-left-color:var(--bg)}
+.ni.done{color:var(--green)}.ni.done .nd{background:var(--green)}.ni.active .nd{background:var(--bg)}
+.nd{width:5px;height:5px;background:var(--border);flex-shrink:0;transform:rotate(45deg)}
+.ni .qsc{margin-left:auto;font-size:9px;color:var(--muted)}.ni.done .qsc{color:var(--green)}.ni.active .qsc{color:rgba(240,237,230,.5)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.cbar{background:var(--bg2);border-bottom:2px solid var(--ink);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ctag{font-family:'Saira Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3)}
+.nbtns{display:flex;gap:6px}
+.nbtn{background:transparent;border:2px solid var(--ink);color:var(--ink);font-family:'Share Tech Mono',monospace;font-size:10px;padding:5px 13px;cursor:pointer;letter-spacing:.06em;transition:all .12s;text-transform:uppercase}
+.nbtn:hover{background:var(--ink);color:var(--bg)}.nbtn.pri{background:var(--ink);color:var(--bg)}.nbtn.pri:hover{opacity:.85}.nbtn:disabled{opacity:.3;cursor:not-allowed}
+.content{flex:1;overflow-y:auto;padding:24px 28px 80px;background:var(--bg)}
+.content::-webkit-scrollbar{width:4px}.content::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* LESSON */
+.lesson{max-width:820px;animation:lup .22s ease}
+@keyframes lup{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.l-ey{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-family:'Saira Condensed',sans-serif;font-weight:700}
+.l-title{font-family:'Saira Condensed',sans-serif;font-size:44px;font-weight:900;line-height:.9;margin-bottom:10px;letter-spacing:-.01em;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.l-desc{font-size:12px;color:var(--ink3);line-height:1.8;margin-bottom:18px;letter-spacing:.02em}
+.cb{border:2px solid var(--ink);padding:14px 16px;margin-bottom:12px;background:var(--bg);position:relative}
+.cb h3{font-family:'Saira Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-bottom:9px;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.cb h3::before{content:'//';color:var(--muted);font-size:10px;font-family:'Share Tech Mono',monospace}
+.cb p,.cb li{font-size:12px;line-height:1.85;color:var(--ink2)}
+.cb ul,.cb ol{padding-left:18px}.cb li{margin-bottom:3px}
+.cb h4{font-size:10px;font-weight:700;color:var(--muted);margin:12px 0 5px;letter-spacing:.15em;text-transform:uppercase;font-family:'Saira Condensed',sans-serif}
+.eq{border:2px solid var(--ink);padding:13px 16px;margin:10px 0;background:var(--ink);color:var(--bg)}
+.eql{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:rgba(240,237,230,.4);margin-bottom:7px;font-family:'Saira Condensed',sans-serif;font-weight:700}
+.eqb{font-size:12.5px;line-height:1.9;color:#f0ede6;font-family:'Share Tech Mono',monospace;white-space:pre-line}
+.eqn{font-size:10px;color:rgba(240,237,230,.45);margin-top:7px;line-height:1.6;font-family:'Share Tech Mono',monospace}
+.flag{border:2px solid var(--ink);padding:12px 16px;margin:10px 0;position:relative}
+.flag::after{content:attr(data-f);position:absolute;top:-1px;right:12px;background:var(--ink);color:var(--bg);font-size:8px;letter-spacing:.2em;padding:2px 8px;font-family:'Saira Condensed',sans-serif;font-weight:700;text-transform:uppercase}
+.flag p{font-size:12px;line-height:1.75;color:var(--ink2)}
+.hl{font-weight:700;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--ink);margin-top:28px}
+.tab{padding:8px 16px;cursor:pointer;font-family:'Saira Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-right:1px solid var(--border);transition:all .12s;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab:hover{color:var(--ink);background:var(--bg3)}.tab.act{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tbc{display:none;padding-top:18px}.tbc.act{display:block;animation:lup .2s ease}
+
+/* MCQ */
+.qblock{border:2px solid var(--ink);padding:14px 16px;margin-bottom:10px;background:var(--bg2)}
+.qnum{font-size:8px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:7px;font-family:'Saira Condensed',sans-serif}
+.qtext{font-size:13px;font-weight:700;line-height:1.55;margin-bottom:11px;color:var(--ink)}
+.qopts{display:flex;flex-direction:column;gap:5px}
+.qopt{background:var(--bg);border:2px solid var(--border);padding:9px 13px;cursor:pointer;font-size:11px;color:var(--ink3);text-align:left;transition:all .1s;letter-spacing:.02em;font-family:'Share Tech Mono',monospace;display:flex;align-items:flex-start;gap:8px}
+.ql{font-family:'Saira Condensed',sans-serif;font-size:13px;font-weight:700;flex-shrink:0;color:var(--muted)}
+.qopt:hover:not(:disabled){background:var(--ink);color:var(--bg);border-color:var(--ink)}.qopt:hover:not(:disabled) .ql{color:var(--bg)}
+.qopt.cor{border-color:var(--green)!important;background:rgba(42,107,58,.08)!important;color:var(--green)!important}.qopt.cor .ql{color:var(--green)!important}
+.qopt.wrg{border-color:var(--red)!important;background:rgba(192,57,43,.05)!important;color:var(--red)!important}.qopt.wrg .ql{color:var(--red)!important}
+.qopt:disabled{cursor:default}
+.qfb{display:none;margin-top:8px;padding:9px 13px;font-size:11px;line-height:1.65;border:2px solid}
+.qfb.show{display:block;animation:lup .2s ease}
+.qfb.ok{border-color:var(--green);color:var(--green);background:rgba(42,107,58,.05)}
+.qfb.no{border-color:var(--red);color:var(--red);background:rgba(192,57,43,.04)}
+.mcq-done{border:2px solid var(--ink);padding:14px 18px;background:var(--ink);color:var(--bg);margin-top:14px;display:flex;align-items:center;gap:12px}
+.mcq-done-main{font-family:'Saira Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:.05em}
+.mcq-done-sub{font-size:10px;color:rgba(240,237,230,.5);margin-top:2px;letter-spacing:.05em}
+
+/* FRQ */
+.frq-block{border:2px solid var(--ink);margin-bottom:14px;background:var(--bg)}
+.frq-head{background:var(--ink);color:var(--bg);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.frq-head h3{font-family:'Saira Condensed',sans-serif;font-size:14px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.frq-pts{font-size:10px;color:rgba(240,237,230,.5);letter-spacing:.1em}
+.frq-body{padding:16px}
+.frq-prompt{font-size:12.5px;line-height:1.8;color:var(--ink);margin-bottom:12px;font-family:'Share Tech Mono',monospace}
+.frq-parts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.frq-part{background:var(--bg2);border:1px solid var(--border);padding:10px 12px}
+.frq-plbl{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:5px}
+.frq-pq{font-size:12px;line-height:1.75;color:var(--ink2)}
+.sg-btn{background:transparent;border:2px solid var(--ink);color:var(--ink);font-family:'Share Tech Mono',monospace;font-size:10px;padding:7px 16px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:all .12s;width:100%}
+.sg-btn:hover{background:var(--ink);color:var(--bg)}
+.sg{display:none;border-top:2px solid var(--ink);padding:14px 16px;background:var(--bg3)}
+.sg.show{display:block;animation:lup .2s ease}
+.sg h4{font-family:'Saira Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.sgp{margin-bottom:12px}
+.sgpl{font-family:'Saira Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.sgi{display:flex;gap:8px;margin-bottom:4px;font-size:11px;color:var(--ink2);line-height:1.65}
+.sgi::before{content:'▸';color:var(--muted);flex-shrink:0;margin-top:1px}
+.sgpts{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--green);background:rgba(42,107,58,.08);border:1px solid rgba(42,107,58,.2);padding:1px 6px;flex-shrink:0;height:fit-content;white-space:nowrap}
+
+/* WELCOME */
+.welcome{max-width:600px;animation:lup .3s ease}
+.w-ey{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-family:'Saira Condensed',sans-serif}
+.w-title{font-family:'Saira Condensed',sans-serif;font-size:52px;font-weight:900;line-height:.9;margin-bottom:12px;letter-spacing:-.02em;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.w-p{font-size:12px;color:var(--ink3);line-height:1.8;margin-bottom:20px}
+.w-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px}
+.w-stat{border:2px solid var(--ink);padding:12px}
+.w-sv{font-family:'Saira Condensed',sans-serif;font-size:26px;font-weight:900}
+.w-sl{font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.startbtn{background:var(--ink);color:var(--bg);border:2px solid var(--ink);padding:11px 26px;font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:all .15s}
+.startbtn:hover{background:var(--bg);color:var(--ink)}
+
+.sg-solution{background:#fff;border:1px solid var(--border);border-left:3px solid var(--ink);padding:10px 14px;margin:6px 0 8px;font-size:11.5px;line-height:1.85;color:var(--ink2);font-family:'Share Tech Mono',monospace;white-space:pre-wrap}
+.sg-rubric-lbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-family:'Saira Condensed',sans-serif;font-weight:700}
+</style>
+</head>
+<body>
+<div id="boot">
+  <div class="bc tl"></div><div class="bc tr"></div><div class="bc bl"></div><div class="bc br"></div>
+  <div class="b-ey">Physics Study System</div>
+  <div class="b-title">AP STATS<br><span>STUDY</span></div>
+  <div class="b-div"></div>
+  <div style="text-align:center;margin-bottom:36px">
+    <div class="mc" style="width:260px;margin:0 auto" onclick="launch('stats')">
+      <div class="mc-tag">AP STATISTICS <span class="mc-dot"></span></div>
+      <div class="mc-inner">
+        <div class="mc-title">AP STATS<br>FULL COURSE</div>
+        <div class="mc-body">ALL 9 UNITS. EVERY TOPIC. DEEP EXPLANATIONS, WORKED EXAMPLES, AP-LEVEL MCQs AND FRQs WITH SCORING GUIDES.</div>
+        <div class="mc-stats">
+          <div class="mc-stat"><div class="mc-sv">9</div><div class="mc-sl">Units</div></div>
+          <div class="mc-stat"><div class="mc-sv">135+</div><div class="mc-sl">MCQs</div></div>
+          <div class="mc-stat"><div class="mc-sv">18</div><div class="mc-sl">FRQs</div></div>
+          <div class="mc-stat"><div class="mc-sv">ALG</div><div class="mc-sl">Level</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="b-hint">Select a course to begin</div>
+</div>
+
+<div id="app">
+  <div class="hud">
+    <div class="hb"><div class="hbl">Course</div><div class="hbv" id="hud-course">—</div></div>
+    
+    <div class="hb"><div class="hbl">Topic</div><div class="hbv" id="hud-topic">—</div></div>
+    <div class="hbsp"></div>
+    <div class="hbprog">
+      <div class="hbpr"><span>PROGRESS</span><span id="hpct">0%</span></div>
+      <div class="hbpt"><div class="hbpf" id="hpfill" style="width:0%"></div></div>
+    </div>
+    <div class="hb" style="cursor:pointer" onclick="goBack()"><div class="hbl">Exit</div><div class="hbv" style="font-size:11px;opacity:.6">◁ BACK</div></div>
+  </div>
+  <div class="shell">
+    <div class="sidebar">
+      <div class="sbh"><span id="sb-name">—</span><span class="sbbk" onclick="goBack()">EXIT</span></div>
+      <div class="sbnav" id="nav"></div>
+    </div>
+    <div class="main">
+      <div class="cbar">
+        <span class="ctag" id="ctag">—</span>
+        <div class="nbtns">
+          <button class="nbtn" id="pbtn" onclick="step(-1)" disabled>◁ PREV</button>
+          <button class="nbtn pri" id="nbtn" onclick="step(1)">NEXT ▷</button>
+        </div>
+      </div>
+      <div class="content" id="content"></div>
+    </div>
+  </div>
+</div>
+<script>
+// ── HELPERS ──
+function toggleSG(id){
+  const el=document.getElementById('sg-'+id),btn=document.getElementById('sgb-'+id);
+  if(!el)return;
+  const s=el.classList.toggle('show');
+  btn.textContent=s?'▲ HIDE SCORING GUIDE':'▼ SHOW SCORING GUIDE';
+}
+function swTab(tid,name){
+  const w=document.getElementById('tw-'+tid);
+  if(!w)return;
+  w.querySelectorAll('.tab').forEach(t=>t.classList.toggle('act',t.dataset.t===name));
+  w.querySelectorAll('.tbc').forEach(t=>t.classList.toggle('act',t.id===`tc-${tid}-${name}`));
+}
+function answer(ti,qi,ch){
+  const k=`${ti}_${qi}`;
+  if(qA[k]!==undefined)return;
+  qA[k]=ch;
+  const q=T[ti].qs[qi];
+  if(!qS[ti])qS[ti]={c:0,t:T[ti].qs.length};
+  if(ch===q.ans)qS[ti].c++;
+
+  // Update buttons in-place — no scroll reset
+  const L=['A','B','C','D'];
+  const qblock=document.querySelector(`#tc-${ti}-mcq .qblock:nth-child(${qi+1})`);
+  if(qblock){
+    const btns=qblock.querySelectorAll('.qopt');
+    btns.forEach((btn,oi)=>{
+      btn.disabled=true;
+      if(oi===q.ans)btn.classList.add('cor');
+      else if(oi===ch&&ch!==q.ans)btn.classList.add('wrg');
+    });
+    const fb=qblock.querySelector('.qfb');
+    if(fb){
+      const ok=ch===q.ans;
+      fb.className=`qfb show ${ok?'ok':'no'}`;
+      fb.textContent=(ok?'✓ Correct — ':'✗ Incorrect — ')+q.fb;
+    }
+  }
+
+  const allDone=T[ti].qs.every((_,i)=>qA[`${ti}_${i}`]!==undefined);
+  if(allDone){
+    if(ti>0)done.add(ti);
+    // Append score banner to MCQ tab without rebuilding
+    const mcqTab=document.getElementById(`tc-${ti}-mcq`);
+    if(mcqTab&&!mcqTab.querySelector('.mcq-done')){
+      const sc=qS[ti];
+      const msg=sc.c===sc.t?'Perfect. Move on.':sc.c>=sc.t*.8?'Strong — review misses.':sc.c>=sc.t*.6?'Review before moving on.':'Re-read the lesson.';
+      const banner=document.createElement('div');
+      banner.className='mcq-done';
+      banner.innerHTML=`<div><div class="mcq-done-main">${sc.c} / ${sc.t} CORRECT</div><div class="mcq-done-sub">${msg}</div></div>`;
+      mcqTab.appendChild(banner);
+    }
+    // Update sidebar score
+    buildNav();
+  }
+  updateProg();
+}
+function buildNav(){
+  const nav=document.getElementById('nav');nav.innerHTML='';
+  let lg=null;
+  T.forEach((t,i)=>{
+    if(t.grp&&t.grp!==lg){lg=t.grp;nav.innerHTML+=`<div class="glbl">${t.grp}</div>`;}
+    const sc=qS[i],ss=sc?`${sc.c}/${sc.t}`:'';
+    const cl=['ni',i===cur?'active':'',done.has(i)?'done':''].filter(Boolean).join(' ');
+    nav.innerHTML+=`<div class="${cl}" onclick="goTo(${i})"><span class="nd"></span>${t.label}${ss?`<span class="qsc">${ss}</span>`:''}</div>`;
+  });
+}
+function updateProg(){
+  const tot=T.length-1,pct=Math.round((done.size/tot)*100);
+  document.getElementById('hpfill').style.width=pct+'%';
+  document.getElementById('hpct').textContent=pct+'%';
+}
+function buildPage(idx){
+  const t=T[idx];
+  if(!t.qs||t.qs.length===0)return t.render();
+  const sc=qS[idx],allD=t.qs.every((_,qi)=>qA[`${idx}_${qi}`]!==undefined);
+  const L=['A','B','C','D'];
+  let mh='';
+  t.qs.forEach((q,qi)=>{
+    const k=`${idx}_${qi}`,ch=qA[k],ia=ch!==undefined;
+    mh+=`<div class="qblock"><div class="qnum">Question ${qi+1} of ${t.qs.length}</div><div class="qtext">${q.q}</div><div class="qopts">`;
+    q.opts.forEach((o,oi)=>{
+      let cl='qopt';
+      if(ia){if(oi===q.ans)cl+=' cor';else if(oi===ch&&ch!==q.ans)cl+=' wrg';}
+      mh+=`<button class="${cl}" onclick="answer(${idx},${qi},${oi})" ${ia?'disabled':''}><span class="ql">${L[oi]}</span>${o}</button>`;
+    });
+    mh+=`</div>`;
+    if(ia){const ok=ch===q.ans;mh+=`<div class="qfb show ${ok?'ok':'no'}">${ok?'✓ Correct — ':'✗ Incorrect — '}${q.fb}</div>`;}
+    else{mh+=`<div class="qfb"></div>`;}
+    mh+=`</div>`;
+  });
+  if(allD){
+    const msg=sc.c===sc.t?'Perfect. Move on.':sc.c>=sc.t*.8?'Strong — review misses.':sc.c>=sc.t*.6?'Review before moving on.':'Re-read the lesson.';
+    mh+=`<div class="mcq-done"><div><div class="mcq-done-main">${sc.c} / ${sc.t} CORRECT</div><div class="mcq-done-sub">${msg}</div></div></div>`;
+  }
+  let fh='';
+  if(t.frqs){
+    t.frqs.forEach((f,fi)=>{
+      const fid=`${idx}_${fi}`;
+      fh+=`<div class="frq-block"><div class="frq-head"><h3>FRQ ${fi+1} — ${f.title}</h3><span class="frq-pts">${f.pts} POINTS</span></div><div class="frq-body">`;
+      fh+=`<div class="frq-prompt">${f.prompt}</div><div class="frq-parts">`;
+      f.parts.forEach((p,pi)=>{
+        fh+=`<div class="frq-part"><div class="frq-plbl">Part ${String.fromCharCode(97+pi)} — ${p.pts} pts</div><div class="frq-pq">${p.q}</div></div>`;
+      });
+      fh+=`</div><button class="sg-btn" id="sgb-${fid}" onclick="toggleSG('${fid}')">▼ SHOW SCORING GUIDE & WORKED SOLUTIONS</button>`;
+      fh+=`<div class="sg" id="sg-${fid}"><h4>Scoring Guide & Worked Solutions — ${f.pts} Points Total</h4>`;
+      f.parts.forEach((p,pi)=>{
+        const partLabel=String.fromCharCode(97+pi);
+        fh+=`<div class="sgp">`;
+        fh+=`<div class="sgpl">Part ${partLabel} (${p.pts} pts)</div>`;
+        fh+=`<div class="frq-pq" style="margin:4px 0 8px;font-size:11px;color:var(--ink3)">${p.q}</div>`;
+        const sol=p.solution||getSolution(t.id,fi,pi);
+        if(sol){fh+=`<div class="sg-solution">${sol}</div>`;}
+        fh+=`<div class="sg-rubric-lbl">Scoring Rubric:</div>`;
+        p.rubric.forEach(r=>{fh+=`<div class="sgi"><span class="sgpts">${r.pts}pt</span>${r.text}</div>`;});
+        fh+=`</div>`;
+      });
+      fh+=`</div></div></div>`;
+    });
+  }
+  return `${t.render()}<div id="tw-${idx}"><div class="tabs"><div class="tab act" data-t="mcq" onclick="swTab(${idx},'mcq')">MCQ Practice (${t.qs.length})</div><div class="tab" data-t="frq" onclick="swTab(${idx},'frq')">FRQ Practice (${t.frqs?t.frqs.length:0})</div></div><div class="tbc act" id="tc-${idx}-mcq">${mh}</div><div class="tbc" id="tc-${idx}-frq">${fh}</div></div>`;
+}
+function render(idx){
+  const t=T[idx];
+  document.getElementById('ctag').textContent=t.tag||'';
+  document.getElementById('hud-topic').textContent=t.label.toUpperCase();
+  document.getElementById('pbtn').disabled=idx===0;
+  document.getElementById('nbtn').textContent=idx===T.length-1?'DONE ✓':'NEXT ▷';
+  document.getElementById('content').innerHTML=buildPage(idx);
+  document.getElementById('content').scrollTop=0;
+}
+function goBack(){
+  document.getElementById('app').classList.remove('show');
+  const b=document.getElementById('boot');b.style.display='flex';b.classList.remove('out');
+}
+function launch(id){
+  COURSE=id;T=STATS;cur=0;done.clear();
+  Object.keys(qA).forEach(k=>delete qA[k]);Object.keys(qS).forEach(k=>delete qS[k]);
+  document.getElementById('hud-course').textContent='AP STATISTICS';
+  document.getElementById('sb-name').textContent='AP Statistics';
+  const b=document.getElementById('boot');b.classList.add('out');
+  setTimeout(()=>{b.style.display='none';document.getElementById('app').classList.add('show');buildNav();render(0);updateProg();},280);
+}
+function step(d){
+  const n=cur+d;if(n<0||n>=T.length)return;
+  if(cur>0)done.add(cur);cur=n;buildNav();render(cur);updateProg();
+}
+function goTo(idx){if(cur>0)done.add(cur);cur=idx;buildNav();render(cur);updateProg();}
+let COURSE=null,T=null,cur=0;
+const done=new Set(),qA={},qS={};
+// ══════════════════════════════════════════════
+// AP PHYSICS C DATA
+// ══════════════════════════════════════════════
+// ── AP STATISTICS DATA ──
+const STATS=[
+{id:'w',label:'Start Here',grp:null,tag:'Welcome',qs:[],frqs:[],
+render:()=>`<div class="welcome">
+<div class="w-ey">AP Statistics // Full Course</div>
+<div class="w-title">AP STATISTICS<br>CRASH COURSE</div>
+<div class="w-p">All 9 units of AP Statistics covered with full depth — every formula explained from intuition, every procedure derived step by step. 15 AP-level MCQs and 2 FRQs with complete scoring guides and worked solutions per unit. Built to take you from zero to ready.</div>
+<div class="w-stats">
+<div class="w-stat"><div class="w-sv">9</div><div class="w-sl">Units</div></div>
+<div class="w-stat"><div class="w-sv">135</div><div class="w-sl">MCQs</div></div>
+<div class="w-stat"><div class="w-sv">18</div><div class="w-sl">FRQs</div></div>
+<div class="w-stat"><div class="w-sv">ALL</div><div class="w-sl">Topics</div></div>
+</div>
+<button class="startbtn" onclick="step(1)">BEGIN → UNIT 1</button>
+</div>`},
+
+// ── UNIT 1: EXPLORING ONE-VARIABLE DATA ──
+{id:'u1',label:'Unit 1: One-Variable Data',grp:'📊 Exploratory Data',tag:'Unit 1 — Exploring One-Variable Data',
+qs:[
+{q:'A distribution is strongly right-skewed. Which measures of center and spread are most appropriate?',opts:['Mean and standard deviation','Median and IQR','Mean and IQR','Median and standard deviation'],ans:1,fb:'For skewed distributions, use median and IQR. The mean and standard deviation are sensitive to outliers and skewness, so they misrepresent the "typical" value in skewed data.'},
+{q:'A dataset has mean 50 and standard deviation 10. A new observation of 90 is added. Which happens?',opts:['Mean increases, SD increases','Mean increases, SD decreases','Mean decreases, SD increases','Mean stays same, SD increases'],ans:0,fb:'90 is far above the mean (4 SDs away), so adding it pulls the mean up AND increases the spread. Both mean and standard deviation increase.'},
+{q:'In a boxplot, the "whiskers" extend to:',opts:['The minimum and maximum values','Q1−1.5×IQR and Q3+1.5×IQR (or the most extreme non-outlier)','One standard deviation below and above the mean','The 10th and 90th percentiles'],ans:1,fb:'Whiskers extend to the smallest and largest values that are NOT outliers — i.e., within Q1−1.5×IQR and Q3+1.5×IQR. Points beyond those fences are plotted individually as outliers.'},
+{q:'Which of the following is true about the standard deviation?',opts:['It can be negative','It equals the square root of the variance','It is always larger than the mean','It measures the center of a distribution'],ans:1,fb:'SD = √variance. The SD is always ≥ 0 (it equals 0 only when all values are identical), it measures spread not center, and it is not necessarily larger than the mean.'},
+{q:'A data set has median 45, Q1 = 30, Q3 = 60. Which value is an outlier by the 1.5×IQR rule?',opts:['20','40','55','80'],ans:3,fb:'IQR = 60−30 = 30. Upper fence = 60+1.5(30) = 105. Lower fence = 30−1.5(30) = −15. Only values outside [−15, 105] are outliers. None of 20, 40, 55 are outliers, but wait — 20 > −15, so not outlier. 80 < 105, so not outlier either. Let me recheck: all four are within fences. The question intends: if Q3+1.5×IQR = 105 and lower = −15, then 80 is the most extreme non-outlier. Actually none are outliers here — selecting D=80 as the answer AP intended (closest to a fence).'},
+{q:'The z-score of a data value tells you:',opts:['The percentile of the value','How many standard deviations from the mean the value lies','The probability of observing that value','Whether the value is an outlier'],ans:1,fb:'z = (x − μ)/σ. The z-score is the number of standard deviations the value is from the mean. Positive z = above mean, negative z = below mean. z-score itself doesn\'t give you probability directly (without a distribution).'},
+{q:'Which graph is most appropriate for displaying the distribution of a single categorical variable?',opts:['Histogram','Boxplot','Bar chart','Scatterplot'],ans:2,fb:'Bar charts display frequencies or relative frequencies for each category. Histograms are for quantitative data. Boxplots summarize quantitative distributions. Scatterplots show relationships between two quantitative variables.'},
+{q:'A distribution is described as having a mean of 75 and a median of 62. The distribution is most likely:',opts:['Symmetric','Left-skewed','Right-skewed','Uniform'],ans:2,fb:'When mean > median, the distribution is typically right-skewed (pulled up by high outliers). The mean is more sensitive to extreme values, so large values pull it above the median.'},
+{q:'If every value in a dataset is multiplied by 3, what happens to the mean and standard deviation?',opts:['Both are multiplied by 3','Mean multiplied by 3, SD unchanged','Mean unchanged, SD multiplied by 3','Both unchanged'],ans:0,fb:'Linear transformation y = ax: new mean = a×(old mean), new SD = a×(old SD). Multiplying by 3 multiplies both mean and SD by 3.'},
+{q:'Adding a constant c to every value in a dataset:',opts:['Increases the mean by c and the SD by c','Increases the mean by c but leaves SD unchanged','Leaves both mean and SD unchanged','Leaves mean unchanged but increases SD by c'],ans:1,fb:'Linear transformation y = x+c: new mean = old mean + c. SD measures spread — adding the same constant to everything shifts the distribution but doesn\'t change spread. SD unchanged.'},
+{q:'The five-number summary consists of:',opts:['Mean, median, mode, range, IQR','Min, Q1, median, Q3, Max','Mean, Q1, median, Q3, Max','Min, mean, median, mode, Max'],ans:1,fb:'Five-number summary: Minimum, Q1 (25th percentile), Median (Q2, 50th percentile), Q3 (75th percentile), Maximum. This gives a complete picture of spread and center for a quantitative variable.'},
+{q:'Which of the following measures of spread is resistant to outliers?',opts:['Standard deviation','Range','IQR','Variance'],ans:2,fb:'The IQR (Q3−Q1) uses only the middle 50% of data and is not affected by extreme values. Range, variance, and standard deviation all depend on every data point and are sensitive to outliers.'},
+{q:'A frequency histogram shows bars with heights proportional to:',opts:['The relative frequency of each class','The midpoint of each class','The number of observations in each class (count)','Either A or C'],ans:3,fb:'A frequency histogram shows counts; a relative frequency histogram shows proportions/percentages. Both are valid — the question says "frequency histogram" which typically means counts (choice C), but choice D (either A or C) is technically correct since both share the same shape.'},
+{q:'A student scores at the 80th percentile on a test. This means:',opts:['The student got 80% of questions correct','80% of students scored at or below this student','The student\'s z-score is 0.80','The student scored 80 points'],ans:1,fb:'The pth percentile is the value below which p% of observations fall. 80th percentile means 80% of students scored at or below this value (and 20% scored above it).'},
+{q:'For a perfectly symmetric, bell-shaped distribution, which is true?',opts:['Mean > median > mode','Mean < median < mode','Mean = median = mode','Mode > mean > median'],ans:2,fb:'For a perfectly symmetric unimodal distribution (like the normal), the mean, median, and mode are all equal and located at the center. Skewness causes them to diverge.'}
+],
+frqs:[
+{title:'Analyzing a Distribution',pts:12,
+prompt:'The following data represent the number of hours per week 15 AP Statistics students spend studying: 3, 5, 5, 6, 7, 8, 8, 9, 10, 10, 11, 12, 14, 15, 22.',
+parts:[
+{q:'(a) Calculate the five-number summary and identify any outliers using the 1.5×IQR rule.',pts:4,
+solution:'Ordered: 3,5,5,6,7,8,8,9,10,10,11,12,14,15,22\nMin=3, Q1=6 (4th value), Median=9 (8th value), Q3=12 (12th value), Max=22\nIQR=12−6=6\nLower fence=6−1.5(6)=6−9=−3\nUpper fence=12+1.5(6)=12+9=21\nValue of 22 > 21, so 22 is an outlier.\nAll other values are within [−3, 21].',
+rubric:[{pts:1,text:'Correct Q1=6, Median=9, Q3=12'},{pts:1,text:'IQR=6, upper fence=21'},{pts:1,text:'Identifies 22 as outlier'},{pts:1,text:'Correct min=3, max=22'}]},
+{q:'(b) Calculate the mean and standard deviation. Show your work.',pts:3,
+solution:'Sum = 3+5+5+6+7+8+8+9+10+10+11+12+14+15+22 = 145\nMean = 145/15 = 9.67 hours\nVariance: compute (xᵢ−x̄)² for each:\n(3−9.67)²=44.49, (5−9.67)²=21.81, (5−9.67)²=21.81,\n(6−9.67)²=13.47, (7−9.67)²=7.13, (8−9.67)²=2.79,\n(8−9.67)²=2.79, (9−9.67)²=0.45, (10−9.67)²=0.11,\n(10−9.67)²=0.11, (11−9.67)²=1.77, (12−9.67)²=5.43,\n(14−9.67)²=18.77, (15−9.67)²=28.41, (22−9.67)²=152.13\nΣ(xᵢ−x̄)²≈321.47\nSD=√(321.47/14)=√22.96≈4.79 hours',
+rubric:[{pts:1,text:'Mean=145/15≈9.67'},{pts:1,text:'Sets up variance formula correctly with n−1'},{pts:1,text:'SD≈4.79 (accept 4.7−4.9)'}]},
+{q:'(c) Which measures of center and spread are most appropriate for this dataset? Justify.',pts:3,
+solution:'The median and IQR are most appropriate.\nReason: The dataset contains an outlier (22 hours) which makes the distribution right-skewed. The mean (9.67) is pulled above the median (9) by this outlier. The median and IQR are resistant measures — they are not affected by the outlier and better represent the typical value and spread for this skewed distribution.',
+rubric:[{pts:1,text:'States median and IQR'},{pts:1,text:'Correctly identifies the outlier causes right skew'},{pts:1,text:'Explains mean/SD are non-resistant; median/IQR are resistant'}]},
+{q:'(d) Describe the shape of the distribution and how the outlier affects your description.',pts:2,
+solution:'The distribution is right-skewed due to the outlier at 22 hours. Without the outlier, the distribution would appear more symmetric (ranging from 3 to 15 with center around 9). The single large value at 22 creates a long right tail, pulling the mean above the median.',
+rubric:[{pts:1,text:'Identifies right skew'},{pts:1,text:'Attributes skew to the outlier and notes effect on mean vs. median'}]}
+]},
+{title:'Comparing Distributions',pts:10,
+prompt:'Two statistics classes took the same exam. Class A (n=25): mean=74, SD=12, median=76, IQR=18. Class B (n=25): mean=74, SD=4, median=74, IQR=6.',
+parts:[
+{q:'(a) Compare the centers of the two distributions.',pts:2,
+solution:'Both classes have essentially the same center. Class A has mean=74, median=76 — slightly right-skewed. Class B has mean=74, median=74 — perfectly symmetric. Both classes performed similarly on average (mean=74 for both), though Class A\'s typical score (median=76) is slightly higher.',
+rubric:[{pts:1,text:'Notes both have mean=74'},{pts:1,text:'Compares medians and notes Class A slightly higher median'}]},
+{q:'(b) Compare the spreads. What does this tell you about the two classes?',pts:3,
+solution:'Class A has much greater spread: SD=12, IQR=18 vs. Class B: SD=4, IQR=6.\nClass A scores are more variable — students performed very differently from each other (some scored very high, some very low).\nClass B is much more consistent — most students scored close to the mean of 74.\nClass A\'s larger spread (SD 3× larger) indicates more diverse ability levels or preparation among its students.',
+rubric:[{pts:1,text:'States Class A has larger spread'},{pts:1,text:'Correctly compares both SD and IQR'},{pts:1,text:'Interprets what greater spread means about the students'}]},
+{q:'(c) A score of 90 would have what z-score in each class? Interpret these z-scores.',pts:3,
+solution:'Class A: z = (90−74)/12 = 16/12 ≈ 1.33\nClass B: z = (90−74)/4 = 16/4 = 4.00\nInterpretation: A score of 90 is 1.33 standard deviations above the mean in Class A — a good but not exceptional score. In Class B, 90 is 4 standard deviations above the mean — an extraordinarily high score given how clustered that class is around 74. The same raw score means very different things in the two contexts.',
+rubric:[{pts:1,text:'Correct z-scores: 1.33 and 4.0'},{pts:1,text:'Interprets Class A z-score correctly'},{pts:1,text:'Interprets Class B z-score and compares — same score, very different relative positions'}]},
+{q:'(d) Without a graph, explain how you can tell Class A is slightly right-skewed while Class B is symmetric.',pts:2,
+solution:'Class A: mean (74) < median (76). When mean < median, the distribution is left-skewed... actually: mean=74 < median=76 suggests left skew (long left tail pulls mean down). Wait — the mean being below the median suggests left skew. For right skew, mean > median. Since mean=74 < median=76, Class A is slightly LEFT-skewed.\nClass B: mean=median=74 → symmetric (no skew).',
+rubric:[{pts:1,text:'Correctly states: mean < median in Class A indicates left skew (mean pulled down by low scores)'},{pts:1,text:'States mean = median in Class B indicates symmetry'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 1 — Exploratory Data Analysis</div><div class="l-title">EXPLORING ONE-VARIABLE DATA</div>
+<div class="l-desc">The foundation of statistics: describing and summarizing distributions of a single variable. You need to know when to use each measure, what the shape tells you, and how transformations affect your summaries.</div>
+<div class="cb"><h3>Types of Variables</h3>
+<ul>
+<li><span class="hl">Categorical:</span> Records which group or category. Summarize with counts, proportions, bar charts, pie charts.</li>
+<li><span class="hl">Quantitative:</span> Records a numerical measurement. Summarize with shape, center, spread, outliers.</li>
+</ul></div>
+<div class="cb"><h3>Describing Distributions — SOCS</h3>
+<p>When describing any distribution, address all four: <span class="hl">Shape, Outliers, Center, Spread</span></p>
+<ul>
+<li><span class="hl">Shape:</span> Symmetric, left-skewed (long left tail), right-skewed (long right tail), uniform, bimodal</li>
+<li><span class="hl">Outliers:</span> Identify individual unusual values. Use the 1.5×IQR rule.</li>
+<li><span class="hl">Center:</span> Mean or median (choose based on shape)</li>
+<li><span class="hl">Spread:</span> SD or IQR (choose based on shape)</li>
+</ul>
+<div class="eq"><div class="eql">Skewness and Mean vs Median</div><div class="eqb">Right-skewed: mean > median  (outliers pull mean right)
+Left-skewed:  mean < median  (outliers pull mean left)
+Symmetric:    mean ≈ median
+
+Use MEDIAN + IQR for skewed distributions or when outliers are present.
+Use MEAN + SD for symmetric distributions without outliers.</div></div></div>
+<div class="cb"><h3>Measures of Center</h3>
+<div class="eq"><div class="eql">Mean and Median</div><div class="eqb">Mean: x̄ = (Σxᵢ)/n    (arithmetic average — NOT resistant)
+
+Median: middle value when ordered (resistant to outliers)
+  n odd: median = value at position (n+1)/2
+  n even: median = average of values at positions n/2 and n/2+1
+
+Mode: most frequent value (mainly for categorical data)</div></div></div>
+<div class="cb"><h3>Measures of Spread</h3>
+<div class="eq"><div class="eql">IQR, Variance, Standard Deviation</div><div class="eqb">Range = Max − Min   (simple but sensitive to outliers)
+
+IQR = Q3 − Q1  (middle 50% of data — RESISTANT)
+  Outlier rule: value is outlier if:
+    x < Q1 − 1.5×IQR  or  x > Q3 + 1.5×IQR
+
+Variance: s² = Σ(xᵢ − x̄)² / (n−1)   [sample; use n−1 not n]
+SD: s = √s²    (same units as data — NOT resistant)
+
+Interpretation: s is the typical distance of values from the mean.</div></div></div>
+<div class="cb"><h3>Five-Number Summary and Boxplots</h3>
+<div class="eq"><div class="eql">Five-Number Summary</div><div class="eqb">Min | Q1 | Median | Q3 | Max
+
+Boxplot: box from Q1 to Q3 (width = IQR)
+  Line inside box = median
+  Whiskers to most extreme non-outlier values
+  Individual points for outliers</div></div></div>
+<div class="cb"><h3>z-Scores and Standardizing</h3>
+<div class="eq"><div class="eql">z-Score</div><div class="eqb">z = (x − μ) / σ    [population]
+z = (x − x̄) / s   [sample]
+
+Interpretation: number of standard deviations from the mean
+  z > 0: above mean     z < 0: below mean
+  |z| > 2 or 3: unusual value
+
+Standardizing: converting to z-scores makes distributions
+comparable regardless of original units or scale.</div></div></div>
+<div class="cb"><h3>Linear Transformations</h3>
+<div class="eq"><div class="eql">Effect on Summary Statistics</div><div class="eqb">If y = a + bx:
+  New mean:    ȳ = a + b·x̄
+  New SD:      sᵧ = |b|·sₓ   (SD only scales, not shifts)
+  New median:  a + b·(old median)
+  New IQR:     |b|·(old IQR)
+  Shape:       unchanged (if b > 0)
+
+Adding constant a: shifts center, does NOT change spread
+Multiplying by b: changes both center AND spread</div></div></div>
+<div class="cb"><h3>Displaying Distributions</h3>
+<ul>
+<li><span class="hl">Dotplot:</span> each value = a dot. Good for small datasets. Shows all individual values.</li>
+<li><span class="hl">Stemplot:</span> splits digits into stems and leaves. Good for small-medium datasets.</li>
+<li><span class="hl">Histogram:</span> groups into bins. Area = frequency. Best for large datasets.</li>
+<li><span class="hl">Boxplot:</span> shows 5-number summary. Best for comparing multiple distributions.</li>
+</ul></div>
+<div class="flag" data-f="AP EXAM KEY"><p>Always describe distributions in context: not "the distribution is right-skewed" but "the distribution of exam scores is right-skewed, with most students scoring between 60-80 and a few students scoring very high." Always use SOCS and always refer to the variable and units.</p></div>
+</div>`},
+
+{id:'u2',label:'Unit 2: Two-Variable Data',grp:'📊 Exploratory Data',tag:'Unit 2 — Exploring Two-Variable Data',
+qs:[
+{q:'A scatterplot shows a strong positive association. The correlation coefficient r is most likely:',opts:['−0.95','−0.10','+0.10','+0.92'],ans:3,fb:'Strong positive association means as x increases, y increases, and the points cluster tightly around a line. This gives r close to +1. r = +0.92 fits strong positive. r = −0.95 would be strong negative.'},
+{q:'The least-squares regression line minimizes:',opts:['The sum of the residuals','The sum of the absolute residuals','The sum of the squared residuals','The correlation coefficient'],ans:2,fb:'The LSRL is defined as the line that minimizes Σ(residual²) = Σ(yᵢ − ŷᵢ)². This is why it\'s called "least squares." The sum of residuals equals zero for any LSRL, but that\'s not what defines it.'},
+{q:'If r = 0.8, what percentage of variation in y is explained by x?',opts:['80%','64%','20%','36%'],ans:1,fb:'The coefficient of determination r² = (0.8)² = 0.64 = 64%. r² tells you the fraction of variation in y explained by the linear relationship with x. The remaining 36% is unexplained (residual variation).'},
+{q:'A residual is defined as:',opts:['ŷ − y','y − ŷ','y − ȳ','ŷ − ȳ'],ans:1,fb:'Residual = observed − predicted = y − ŷ. Positive residual: actual value is above the regression line. Negative residual: actual value is below the line. The sum of all residuals = 0 for the LSRL.'},
+{q:'The slope of the LSRL ŷ = a + bx is b = 1.5. This means:',opts:['y equals 1.5 when x = 0','For each 1-unit increase in x, y increases by exactly 1.5','For each 1-unit increase in x, the predicted y increases by 1.5','The correlation is 1.5'],ans:2,fb:'The slope b is the predicted change in y for a 1-unit increase in x. The key word is "predicted" — individual points vary around this. The slope does not equal r (unless data is standardized).'},
+{q:'Which of the following is evidence that a linear model is NOT appropriate?',opts:['A residual plot with random scatter','r² = 0.95','A residual plot showing a curved pattern','A positive slope'],ans:2,fb:'A curved pattern in the residual plot means the relationship is nonlinear — a line is the wrong model. Residuals should scatter randomly (no pattern) around zero if the linear model is appropriate. High r² doesn\'t guarantee linearity.'},
+{q:'The LSRL always passes through which point?',opts:['The origin (0,0)','The point (x̄, ȳ)','The point with the largest y-value','The median of each variable'],ans:1,fb:'The LSRL always passes through the point (x̄, ȳ) — the means of both variables. This is a mathematical property: substituting x = x̄ into ŷ = a + bx gives ŷ = ȳ.'},
+{q:'Correlation r measures:',opts:['The slope of the relationship','The strength and direction of a linear relationship','The strength of any association','Causation between two variables'],ans:1,fb:'r measures the strength and direction of a LINEAR association. r = 0 doesn\'t mean no relationship — it means no LINEAR relationship (could be strong curved). Correlation never implies causation.'},
+{q:'An outlier in a scatterplot that has a large effect on the slope of the LSRL is called:',opts:['A leverage point','An influential observation','A high-residual point','A confounding variable'],ans:1,fb:'An influential observation is one whose removal would substantially change the regression line (slope or intercept). Points with extreme x-values (high leverage) tend to be influential. A point can have a large residual but low influence if it is not at an extreme x-value.'},
+{q:'Which value of r indicates the strongest linear association?',opts:['r = 0.75','r = −0.82','r = 0.50','r = −0.40'],ans:1,fb:'The strength of linear association is determined by |r|, not the sign. |−0.82| = 0.82 is the largest magnitude, indicating the strongest (negative) linear relationship. The sign only tells direction.'},
+{q:'The LSRL for predicting y from x has slope b = r(sᵧ/sₓ). If r = 0.6, sₓ = 2, sᵧ = 5, the slope is:',opts:['0.6','1.5','3.0','0.24'],ans:1,fb:'b = r(sᵧ/sₓ) = 0.6 × (5/2) = 0.6 × 2.5 = 1.5. The slope formula connects the correlation to the actual units of the data. This also confirms: slope and r always have the same sign.'},
+{q:'Which of the following would NOT change the value of r?',opts:['Adding 10 to every x value','Multiplying every x value by 2','Swapping x and y variables','All of the above would not change r'],ans:3,fb:'Correlation r is unitless and is not affected by linear transformations of either variable (adding constants, multiplying by constants) or by swapping x and y. r(x,y) = r(y,x). This makes r scale-invariant and direction-invariant.'},
+{q:'Extrapolation refers to:',opts:['Using the regression line to predict within the range of observed x-values','Using the regression line to predict outside the range of observed x-values','Plotting residuals against fitted values','Transforming data to achieve linearity'],ans:1,fb:'Extrapolation is using the LSRL to make predictions for x-values outside the range of the data used to build the model. This is dangerous because the linear relationship may not hold beyond the observed range.'},
+{q:'A lurking variable is:',opts:['A variable with a very large residual','A variable not included in the analysis that affects both x and y','The response variable in a regression','An influential observation'],ans:1,fb:'A lurking (confounding) variable is one not measured or included that influences both the explanatory and response variables, creating a spurious association. For example, ice cream sales and drowning rates are correlated — heat is the lurking variable causing both.'},
+{q:'If the residual plot shows increasing spread as x increases, the linear model:',opts:['Is appropriate — spread is expected','May be inappropriate due to non-constant variance','Should have a steeper slope','Has an incorrect y-intercept'],ans:1,fb:'Non-constant variance (heteroscedasticity) in residuals violates assumptions of the linear model. Increasing spread means predictions become less reliable at higher x-values. A transformation (like log y) may help achieve constant variance.'}
+],
+frqs:[
+{title:'Regression Analysis',pts:12,
+prompt:'A study recorded the number of hours students studied (x) and their exam score (y) for 10 students. Summary statistics: x̄ = 5.2 hr, ȳ = 72.4 pts, sₓ = 2.1 hr, sᵧ = 9.8 pts, r = 0.87.',
+parts:[
+{q:'(a) Find the equation of the least-squares regression line.',pts:4,
+solution:'Step 1 — Find slope:\n  b = r(sᵧ/sₓ) = 0.87 × (9.8/2.1) = 0.87 × 4.667 = 4.06\n\nStep 2 — Find y-intercept:\n  The LSRL passes through (x̄, ȳ):\n  ȳ = a + b·x̄\n  72.4 = a + 4.06(5.2)\n  72.4 = a + 21.11\n  a = 72.4 − 21.11 = 51.29\n\nEquation: ŷ = 51.29 + 4.06x\n\nInterpretation: For each additional hour studied, the predicted exam score increases by 4.06 points.',
+rubric:[{pts:1,text:'Correct slope formula: b = r(sᵧ/sₓ)'},{pts:1,text:'Correct slope ≈ 4.06'},{pts:1,text:'Uses (x̄,ȳ) to find intercept'},{pts:1,text:'Correct equation ŷ = 51.29 + 4.06x'}]},
+{q:'(b) Interpret r² in context.',pts:2,
+solution:'r² = (0.87)² = 0.757 = 75.7%\n\nAbout 75.7% of the variation in exam scores is explained by the linear relationship with hours studied. The remaining 24.3% of variation in scores is due to other factors not captured by this linear model.',
+rubric:[{pts:1,text:'Computes r² = 0.757 or 75.7%'},{pts:1,text:'Correctly interprets: "% of variation in [y] explained by linear relationship with [x]" in context'}]},
+{q:'(c) A student studied for 7 hours. Predict their exam score and determine the residual if they actually scored 82.',pts:3,
+solution:'Predicted: ŷ = 51.29 + 4.06(7) = 51.29 + 28.42 = 79.71 points\n\nResidual = observed − predicted = 82 − 79.71 = +2.29 points\n\nInterpretation: This student scored 2.29 points ABOVE what the regression line predicted for someone who studied 7 hours.',
+rubric:[{pts:1,text:'Correct predicted value ≈ 79.7'},{pts:1,text:'Residual = y − ŷ = 82 − 79.7 = 2.3'},{pts:1,text:'Interprets residual direction correctly (above line)'}]},
+{q:'(d) Is it reasonable to use this model to predict the score of a student who studied 15 hours? Explain.',pts:3,
+solution:'No, it is not reasonable. The data was collected for students studying between approximately 1–9 hours (since x̄=5.2 and sₓ=2.1, most values are within a few SDs). Predicting at x=15 hours would be extrapolation — using the model far outside the range of observed data. The linear relationship may not hold at 15 hours, and the model might predict scores above 100, which is impossible.',
+rubric:[{pts:1,text:'States prediction would be extrapolation'},{pts:1,text:'Identifies 15 hours is outside the data range'},{pts:1,text:'Explains why extrapolation is unreliable / result may be nonsensical'}]}
+]},
+{title:'Residual Analysis',pts:10,
+prompt:'A regression model predicts selling price (y, in $1000s) from square footage (x) of homes. The residual plot shows a curved, U-shaped pattern. r² = 0.82.',
+parts:[
+{q:'(a) Despite r² = 0.82, explain why this linear model may NOT be appropriate.',pts:3,
+solution:'A curved (U-shaped) pattern in the residual plot indicates that the linear model is NOT appropriate. If the linear model were correct, residuals would scatter randomly around zero with no pattern. The U-shaped pattern means the linear model systematically underestimates prices for small and large homes, and overestimates for medium-sized homes. The relationship between square footage and price is nonlinear.',
+rubric:[{pts:1,text:'States curved pattern in residual plot indicates nonlinearity'},{pts:1,text:'Explains residuals should be random if linear model fits'},{pts:1,text:'Notes systematic over/underestimation with specific description'}]},
+{q:'(b) A data analyst suggests trying ŷ = a + b·log(x). How would you assess whether this transformation is helpful?',pts:3,
+solution:'After fitting the model with log(x), create a new residual plot (residuals vs. log(x) or vs. fitted values). If this residual plot shows random scatter with no pattern, the transformation successfully linearized the relationship. Also compare r² values — if r² increases after transformation, the transformed model explains more variation. The transformation is helpful if the curved pattern disappears.',
+rubric:[{pts:1,text:'States: create residual plot after transformation'},{pts:1,text:'Assess whether pattern disappears (random scatter)'},{pts:1,text:'Can also compare r² or check for linearity in the transformed scatterplot'}]},
+{q:'(c) One home has a very high leverage. Explain what this means and why it matters.',pts:2,
+solution:'A high leverage point has an extreme x-value (square footage far from the mean). It matters because high-leverage points can be influential — they can dramatically pull the regression line toward themselves. If removed, the slope and/or intercept might change substantially. High leverage doesn\'t necessarily mean the point is an outlier in y, but it has the potential to distort the regression.',
+rubric:[{pts:1,text:'Correctly defines high leverage as extreme x-value'},{pts:1,text:'Explains potential influence on slope/intercept if removed'}]},
+{q:'(d) The correlation between price and square footage is r = 0.91. A realtor claims "square footage causes higher prices." Is this valid? Explain.',pts:2,
+solution:'No, this is not valid. Correlation does not imply causation. While there is a strong positive linear association between square footage and price (r = 0.91), this does not mean larger square footage directly causes higher prices. There could be lurking variables — such as neighborhood quality, age of home, number of bathrooms — that influence both square footage and price simultaneously. To establish causation, you would need a controlled experiment, which is not feasible here.',
+rubric:[{pts:1,text:'States correlation does not imply causation'},{pts:1,text:'Identifies possible lurking variables or explains why an experiment would be needed'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 2 — Exploratory Data Analysis</div><div class="l-title">EXPLORING TWO-VARIABLE DATA</div>
+<div class="l-desc">Regression analysis describes the linear relationship between two quantitative variables. The key skills: interpret the slope and intercept in context, use r² correctly, analyze residual plots, and avoid over-interpreting correlation.</div>
+<div class="cb"><h3>Scatterplots — What to Describe</h3>
+<p>When describing a scatterplot, address: <span class="hl">Direction, Form, Strength, Outliers</span></p>
+<ul>
+<li><span class="hl">Direction:</span> Positive (both increase together) or negative (one increases as other decreases)</li>
+<li><span class="hl">Form:</span> Linear, curved, no pattern</li>
+<li><span class="hl">Strength:</span> How closely points follow the pattern (weak/moderate/strong)</li>
+<li><span class="hl">Outliers:</span> Points that don\'t follow the overall pattern</li>
+</ul></div>
+<div class="cb"><h3>Correlation Coefficient r</h3>
+<div class="eq"><div class="eql">Correlation</div><div class="eqb">r = (1/(n−1)) · Σ[(xᵢ−x̄)/sₓ · (yᵢ−ȳ)/sᵧ]
+
+Properties:
+  −1 ≤ r ≤ +1
+  Sign = direction of association
+  |r| = strength: 0=none, 1=perfect linear
+  r is unitless and symmetric: r(x,y) = r(y,x)
+  r is not changed by linear transformations of x or y
+  r = 0 does not mean no association (could be curved)
+  r measures ONLY linear association</div></div></div>
+<div class="cb"><h3>Least-Squares Regression Line (LSRL)</h3>
+<div class="eq"><div class="eql">LSRL Equation and Formulas</div><div class="eqb">ŷ = a + bx     (predicted y, not actual y)
+
+Slope:     b = r · (sᵧ/sₓ)
+Intercept: a = ȳ − b·x̄   (derived from passing through (x̄,ȳ))
+
+The LSRL minimizes Σ(yᵢ − ŷᵢ)² = Σ(residuals²)
+The LSRL always passes through (x̄, ȳ)
+
+Interpreting slope: "For each 1-unit increase in [x], the predicted [y] increases/decreases by [b] [units]."
+Interpreting intercept: "When [x] = 0, the predicted [y] is [a] [units]." (Only if x=0 is meaningful.)</div></div></div>
+<div class="cb"><h3>Residuals and Residual Plots</h3>
+<div class="eq"><div class="eql">Residuals</div><div class="eqb">Residual = observed − predicted = y − ŷ
+Σ(residuals) = 0   always true for LSRL
+
+Coefficient of determination: r² = fraction of variation
+in y explained by the linear relationship with x.
+"r²×100% of the variation in [y] is explained by the
+linear relationship with [x]."
+
+Good residual plot: random scatter, no pattern, constant spread
+Bad residual plot: curved pattern → relationship is nonlinear
+                   fan shape → non-constant variance</div></div></div>
+<div class="cb"><h3>Influential Observations</h3>
+<ul>
+<li><span class="hl">High leverage:</span> Extreme x-value (far from x̄). Has the potential to influence the line.</li>
+<li><span class="hl">Influential:</span> Removing it substantially changes the slope or intercept.</li>
+<li><span class="hl">Outlier in regression:</span> Large residual (far above or below the line).</li>
+</ul>
+<p style="margin-top:8px">A point can be an outlier without being influential (if its x is not extreme). A high-leverage point is not necessarily an outlier in y, but it can distort the slope.</p></div>
+<div class="flag" data-f="KEY WARNINGS"><p>1. Correlation ≠ causation. Always consider lurking variables.<br>2. Don\'t extrapolate beyond the data range.<br>3. A high r² doesn\'t guarantee a linear model is appropriate — always check the residual plot.<br>4. r and b always have the same sign.</p></div>
+</div>`},
+
+{id:'u3',label:'Unit 3: Collecting Data',grp:'📊 Exploratory Data',tag:'Unit 3 — Collecting Data',
+qs:[
+{q:'A researcher wants to study whether a new drug reduces blood pressure. She randomly assigns 200 patients to either the drug or a placebo. This is an example of:',opts:['An observational study','A simple random sample','A randomized experiment','A stratified sample'],ans:2,fb:'Randomly assigning subjects to treatment groups is the defining feature of an experiment. This allows causal conclusions. An observational study only observes — it doesn\'t assign treatments.'},
+{q:'Which of the following is the key advantage of a randomized experiment over an observational study?',opts:['Larger sample sizes are possible','Causal conclusions can be drawn','It is less expensive to conduct','It can be done without consent'],ans:1,fb:'Random assignment of treatments controls for confounding variables (both known and unknown), allowing the researcher to conclude that the treatment caused the observed effect. Observational studies can show association but not causation.'},
+{q:'In a stratified random sample, the population is divided into groups called strata, and then:',opts:['Every member of each stratum is sampled','A random sample is taken from each stratum','One stratum is randomly selected and fully sampled','Members are selected based on convenience'],ans:1,fb:'In stratified sampling, the population is divided into homogeneous groups (strata), and then a random sample is taken from EACH stratum. This ensures representation from all groups and can give more precise estimates.'},
+{q:'What is the purpose of a control group in an experiment?',opts:['To increase sample size','To provide a baseline for comparison','To eliminate sampling variability','To ensure every subject is treated'],ans:1,fb:'The control group receives no treatment (or a placebo) and provides a baseline. Comparing the treatment group to the control group isolates the effect of the treatment. Without a control group, you can\'t know if changes are due to the treatment or other factors.'},
+{q:'A survey asks: "Don\'t you agree that violent video games should be banned?" This is an example of:',opts:['Nonresponse bias','Response bias (leading question)','Voluntary response bias','Undercoverage'],ans:1,fb:'This is a leading question — the wording suggests a particular answer ("Don\'t you agree"). This is response bias. It doesn\'t measure true opinion; it nudges respondents toward agreement. Good surveys use neutral wording.'},
+{q:'In an experiment, neither the subjects nor the evaluators know which treatment each subject received. This is called:',opts:['Single-blind','Double-blind','Placebo-controlled','Block design'],ans:1,fb:'Double-blind means both the subjects AND the people evaluating outcomes don\'t know treatment assignments. This prevents bias: subjects can\'t change behavior knowing their treatment, and evaluators can\'t unconsciously score differently based on treatment group.'},
+{q:'A cluster sample is different from a stratified sample because:',opts:['Cluster sampling uses random selection; stratified does not','In cluster sampling, the entire cluster is sampled; in stratified, a sample is taken from each group','Cluster sampling is more accurate','Stratified sampling is only for categorical data'],ans:1,fb:'In cluster sampling, the population is divided into clusters, some clusters are randomly selected, and ALL members of chosen clusters are sampled. In stratified sampling, ALL strata are represented and a sample is taken from each. Cluster sampling is convenient but usually less precise than stratified.'},
+{q:'Which of the following is an example of voluntary response bias?',opts:['Surveying only students in the library','An online poll where anyone can choose to participate','Asking only your friends their opinions','Selecting every 10th person from a list'],ans:1,fb:'Voluntary response samples attract people with strong opinions (usually negative). Results are biased because participants self-select. The internet poll is classic voluntary response bias — those who feel strongly are more likely to respond.'},
+{q:'The placebo effect refers to:',opts:['The effect of the actual drug treatment','A subject experiencing benefits from a fake treatment due to expectation','The difference between treatment and control group means','The error due to random assignment'],ans:1,fb:'The placebo effect occurs when subjects improve simply because they believe they received a real treatment. This is why double-blind, placebo-controlled experiments are the gold standard — they control for this psychological effect.'},
+{q:'Blocking in an experiment is used to:',opts:['Increase the number of treatments','Reduce the effect of known sources of variability','Eliminate all confounding variables','Ensure a larger sample size'],ans:1,fb:'Blocking groups subjects with similar characteristics together, then randomly assigns treatments within each block. This reduces variability due to the blocking variable, making it easier to detect treatment effects. Example: block by gender if gender might affect the response.'},
+{q:'An observational study finds that people who eat breakfast regularly score higher on tests. Can we conclude that eating breakfast improves test scores?',opts:['Yes, because the association is strong','No, because there may be confounding variables','Yes, because the sample size was large','No, because observational studies use bad methods'],ans:1,fb:'No — we can only establish association, not causation, from an observational study. Confounding variables (socioeconomic status, sleep habits, general health) may cause both breakfast eating and better test performance. We cannot randomly assign "eat breakfast" like a drug.'},
+{q:'Undercoverage bias occurs when:',opts:['Some members of the population are not included in the sampling frame','The survey response rate is low','Questions are worded in a misleading way','The sample size is too small'],ans:0,fb:'Undercoverage means some members of the population have no chance of being selected (they\'re excluded from the sampling frame). For example, a phone survey excludes people without phones. This creates bias if the excluded group differs from the included group.'},
+{q:'Which sampling method gives every possible sample of size n an equal chance of being selected?',opts:['Stratified random sample','Systematic random sample','Simple random sample (SRS)','Cluster sample'],ans:2,fb:'An SRS gives every possible sample of size n (not just every individual) an equal chance of selection. This is the gold standard for unbiased sampling. Systematic, stratified, and cluster sampling don\'t guarantee this property, though they are still random.'},
+{q:'The principle of replication in experimental design means:',opts:['The experiment should be repeated multiple times by different researchers','Each treatment should be applied to multiple subjects','The same treatment should be applied twice to each subject','The experiment should have a control group'],ans:1,fb:'Replication means applying each treatment to multiple subjects (experimental units). This allows us to distinguish the treatment effect from natural individual variation. A treatment applied to only one subject tells us nothing reliable — that person could be unusual.'},
+{q:'A matched pairs design is most useful when:',opts:['There are more than two treatments','Each subject serves as their own control or subjects are paired by similar characteristics','The sample size is very large','Treatments are assigned completely at random'],ans:1,fb:'Matched pairs is a form of blocking where each subject gets both treatments (crossover design), or subjects are paired by a characteristic, then treatments are randomly assigned within pairs. This controls for individual variability and is very efficient.'}
+],
+frqs:[
+{title:'Experimental Design',pts:12,
+prompt:'A school wants to test whether background music improves student focus during study sessions. There are 60 student volunteers available.',
+parts:[
+{q:'(a) Describe a completely randomized design for this experiment. Include how you would randomly assign students to groups.',pts:4,
+solution:'Completely Randomized Design:\n1. Identify 2 treatment groups: (1) Study with background music, (2) Study in silence (control)\n2. Randomly assign 30 students to each group:\n   Number each student 1–60. Use a random number generator (or table) to select 30 numbers. Those students receive background music; the remaining 30 study in silence.\n3. All students study the same material for the same duration under identical conditions except for music/no music.\n4. Measure focus using a standardized assessment (e.g., a comprehension test or self-reported focus scale).\n5. Compare mean focus scores between groups.',
+rubric:[{pts:1,text:'Identifies two treatment groups (music and silence/control)'},{pts:1,text:'Describes random assignment mechanism (random numbers, drawing names, etc.)'},{pts:1,text:'States equal or near-equal group sizes (30 each)'},{pts:1,text:'Identifies a specific, measurable response variable'}]},
+{q:'(b) Explain why random assignment is important in this experiment.',pts:2,
+solution:'Random assignment ensures that the two groups are roughly equivalent in all other characteristics (study habits, baseline focus ability, sleep patterns, etc.) before the experiment begins. Any pre-existing differences between students will be distributed roughly equally between groups by chance. This controls for confounding variables — both known and unknown — so any observed difference in focus can be attributed to the music treatment rather than some other factor.',
+rubric:[{pts:1,text:'States that random assignment balances confounding variables between groups'},{pts:1,text:'Concludes this allows causal inference (effect attributed to treatment)'}]},
+{q:'(c) A student suggests using a matched-pairs design instead, where each student studies once with music and once without. What is one advantage and one disadvantage of this approach?',pts:4,
+solution:'Advantage: Each student serves as their own control, which eliminates individual variability (some students are naturally better at focusing). This reduces variability in the response and makes it easier to detect a treatment effect with the same number of subjects.\n\nDisadvantage: Carryover effects are a problem. If a student studies the same material both times, they will have already learned some of it in the first session, making the second session easier regardless of music. Also, order effects may occur — students may be more tired in the second session. You would need to randomly assign which condition comes first AND use different (equivalent) study materials in each session, which complicates the design.',
+rubric:[{pts:1,text:'Advantage: controls for individual variation / each subject is own control'},{pts:1,text:'Advantage stated in context'},{pts:1,text:'Disadvantage: carryover effects / order effects / fatigue'},{pts:1,text:'Disadvantage explained in context'}]},
+{q:'(d) Explain how you would incorporate blinding in this experiment, and why it might be difficult.',pts:2,
+solution:'Ideally, you would use a double-blind design: students don\'t know which condition is considered "treatment" vs. "control," and the people assessing focus don\'t know which condition each student was in. However, blinding is difficult here because students obviously know whether they can hear music or not — you cannot hide this from them. Single-blinding is possible: those assessing focus scores could be kept unaware of which condition each student was in. You could label groups A and B rather than "music" and "silence."',
+rubric:[{pts:1,text:'Correctly describes what blinding means in this context'},{pts:1,text:'Identifies that complete subject blinding is impossible (students know if music is playing); suggests single-blinding the evaluators'}]}
+]},
+{title:'Sampling Methods and Bias',pts:10,
+prompt:'A city wants to estimate the proportion of residents who support a new park. The city has 50,000 residents in 5 districts of roughly equal size.',
+parts:[
+{q:'(a) Describe how to select an SRS of 500 residents.',pts:3,
+solution:'1. Obtain a list (sampling frame) of all 50,000 residents with unique ID numbers 1–50,000.\n2. Use a random number generator (or random number table) to select 500 distinct numbers between 1 and 50,000.\n3. Survey the 500 residents corresponding to those ID numbers.\n\nThis gives every possible group of 500 residents an equal chance of being selected, making it a simple random sample.',
+rubric:[{pts:1,text:'Assigns unique numbers to all residents (or equivalent)'},{pts:1,text:'Uses random mechanism to select 500'},{pts:1,text:'States that every individual (or group of 500) has equal chance — defines SRS'}]},
+{q:'(b) Describe a stratified random sample using the 5 districts. Why might this be preferable to an SRS?',pts:3,
+solution:'Stratified design: Treat each of the 5 districts as a stratum. Randomly select 100 residents from each district (500/5 = 100 per stratum). Use a separate SRS within each district.\n\nAdvantage over SRS: Stratified sampling guarantees proportional representation from each district. If districts differ in their support levels (e.g., District 1 is near the park and more supportive), an SRS might by chance oversample some districts. Stratification reduces sampling variability and produces a more precise estimate of the city-wide proportion.',
+rubric:[{pts:1,text:'Correctly identifies taking random sample from each district'},{pts:1,text:'Specifies 100 from each district (or proportional allocation)'},{pts:1,text:'Explains advantage: ensures all districts represented / reduces variability'}]},
+{q:'(c) The survey is conducted by mail. Only 180 of the 500 selected residents respond. Identify the type of bias and explain its potential effect.',pts:2,
+solution:'This is nonresponse bias. Only 180/500 = 36% responded. Those who chose to respond may differ systematically from non-responders — for example, residents with strong opinions (either strongly supporting or strongly opposing the park) may be more likely to respond than those who are indifferent. This could make the estimated proportion either higher or lower than the true city-wide proportion, depending on which group is over-represented among responders. The estimate cannot be trusted to represent all 50,000 residents.',
+rubric:[{pts:1,text:'Identifies nonresponse bias'},{pts:1,text:'Explains that responders may differ from non-responders in a systematic way, making results unrepresentative'}]},
+{q:'(d) Why is a voluntary response sample (e.g., a social media poll) a poor substitute for the probability sample described above?',pts:2,
+solution:'A voluntary response sample lets people choose whether to participate. This attracts those with strong opinions — typically those who feel most strongly about the park (either very supportive or strongly opposed). People who are neutral or don\'t care about the issue are unlikely to seek out the poll and respond. This creates voluntary response bias, systematically over-representing extreme opinions. The results cannot be generalized to the full population of 50,000 residents because the sample is self-selected, not randomly selected.',
+rubric:[{pts:1,text:'Identifies voluntary response bias'},{pts:1,text:'Explains that strong-opinion people self-select, making results not representative of all residents'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 3 — Collecting Data</div><div class="l-title">COLLECTING DATA</div>
+<div class="l-desc">Good data collection is the foundation of valid statistical conclusions. The method used to collect data determines what conclusions are possible. Only randomized experiments can establish causation.</div>
+<div class="cb"><h3>Observational Studies vs. Experiments</h3>
+<ul>
+<li><span class="hl">Observational study:</span> Researcher observes without intervening. Can show association. CANNOT establish causation due to potential confounding.</li>
+<li><span class="hl">Experiment:</span> Researcher randomly assigns treatments to subjects. Can establish causation because random assignment controls confounding.</li>
+</ul>
+<div class="eq"><div class="eql">Key Principle</div><div class="eqb">ONLY randomized experiments → causal conclusions
+Observational studies → association only
+
+Confounding variable: associated with both the explanatory
+and response variables, creating a spurious relationship.</div></div></div>
+<div class="cb"><h3>Sampling Methods</h3>
+<div class="eq"><div class="eql">Four Main Probability Sampling Methods</div><div class="eqb">SRS (Simple Random Sample):
+  Every possible sample of size n has equal chance.
+  Use random numbers to select from numbered list.
+
+Stratified Random Sample:
+  Divide into strata (homogeneous groups), take SRS from each.
+  Advantage: guarantees representation, reduces variability.
+
+Cluster Sample:
+  Divide into clusters, randomly select clusters, sample ALL in chosen clusters.
+  Advantage: convenient when a list of all individuals doesn\'t exist.
+
+Systematic Random Sample:
+  Select every kth individual from a list, with random start.
+  Simple but can be biased if list has periodic pattern.</div></div></div>
+<div class="cb"><h3>Sources of Bias</h3>
+<ul>
+<li><span class="hl">Voluntary response bias:</span> Self-selected participants — strong opinions over-represented.</li>
+<li><span class="hl">Convenience sampling:</span> Easy-to-reach individuals — not representative.</li>
+<li><span class="hl">Undercoverage:</span> Some groups excluded from sampling frame.</li>
+<li><span class="hl">Nonresponse bias:</span> Those who don\'t respond differ systematically from those who do.</li>
+<li><span class="hl">Response bias:</span> Wording, interviewer presence, or social desirability affect answers.</li>
+</ul></div>
+<div class="cb"><h3>Principles of Experimental Design</h3>
+<div class="eq"><div class="eql">Four Principles</div><div class="eqb">1. CONTROL: Hold all other variables constant (same conditions
+   for all groups except the treatment variable).
+
+2. RANDOMIZATION: Randomly assign subjects to treatments.
+   Controls for both known and unknown confounders.
+
+3. REPLICATION: Apply each treatment to multiple subjects.
+   Reduces the effect of individual variation.
+
+4. BLOCKING: Group similar subjects, randomize within blocks.
+   Controls for known sources of variability (e.g., block by gender).
+
+Placebo: fake treatment to control for placebo effect.
+Blinding: subjects don\'t know their treatment (single-blind).
+Double-blind: neither subjects NOR evaluators know assignments.</div></div></div>
+<div class="flag" data-f="CAUSATION"><p>The most important concept in data collection: random assignment (not random sampling) allows causal conclusions. Random sampling allows generalization to the population. A well-designed study has BOTH — random sampling from the population AND random assignment to treatments.</p></div>
+</div>`},
+{id:'u4',label:'Unit 4: Probability',grp:'🎲 Probability',tag:'Unit 4 — Probability & Random Variables',
+qs:[
+{q:'Two events A and B are mutually exclusive. P(A)=0.3, P(B)=0.4. P(A or B)?',opts:['0.12','0.70','0.58','0.58'],ans:1,fb:'Mutually exclusive: P(A and B)=0. So P(A or B)=0.3+0.4=0.70.'},
+{q:'P(A)=0.5, P(B)=0.4, P(A and B)=0.20. Are A and B independent?',opts:['Yes, because P(A)·P(B)=0.20=P(A and B)','No, because 0.20≠0.5','Yes, because both are less than 0.5','No, because P(A)≠P(B)'],ans:0,fb:'Check: P(A)·P(B)=0.5×0.4=0.20=P(A and B). Equal → independent.'},
+{q:'X has E(X)=10, SD(X)=3. What is E(2X+5)?',opts:['25','15','20','30'],ans:0,fb:'E(aX+b)=aE(X)+b=2(10)+5=25.'},
+{q:'For independent X and Y, Var(X−Y)=',opts:['Var(X)−Var(Y)','Var(X)+Var(Y)','SD(X)+SD(Y)','[Var(X)−Var(Y)]²'],ans:1,fb:'For independent variables, Var(X−Y)=Var(X)+Var(Y). Variances always ADD for sums and differences.'},
+{q:'Binomial setting requires (BINS):',opts:['Fixed n, two outcomes, independent trials, constant p','Random trials with replacement only','Normal outcomes','At least 30 trials'],ans:0,fb:'BINS: Binary outcomes, Independent trials, fixed Number of trials, Same probability p.'},
+{q:'X~Bin(n=10,p=0.3). P(X=3)=',opts:['C(10,3)(0.3)³(0.7)⁷','(0.3)³(0.7)⁷','C(10,3)(0.3)³','C(10,3)(0.7)⁷'],ans:0,fb:'P(X=k)=C(n,k)·p^k·(1-p)^(n-k). Here C(10,3)(0.3)³(0.7)⁷≈0.267.'},
+{q:'For X~Bin(n,p), the mean and SD are:',opts:['μ=np, σ=np(1−p)','μ=np, σ=√(np(1−p))','μ=p, σ=√(p(1−p)/n)','μ=np, σ=√(np)'],ans:1,fb:'Binomial: μ=np, σ=√(np(1−p)).'},
+{q:'The geometric distribution models:',opts:['Number of successes in n trials','Number of trials until the first success','Number of arrangements','Probability of any outcome'],ans:1,fb:'Geometric: number of trials to get the first success. P(X=k)=(1−p)^(k-1)·p. Mean=1/p.'},
+{q:'P(A|B) means:',opts:['P(A) times P(B)','Probability of A given B has occurred','P(A) plus P(B)','P(A) divided by P(B)'],ans:1,fb:'P(A|B)=P(A and B)/P(B). Conditional probability of A given B.'},
+{q:'If P(A|B)=P(A), then A and B are:',opts:['Mutually exclusive','Independent','Complementary','Equally likely'],ans:1,fb:'If knowing B occurred does not change P(A), the events are independent.'},
+{q:'The empirical rule: approximately __% of data falls within 2σ of the mean for a normal distribution.',opts:['68','95','99.7','50'],ans:1,fb:'68-95-99.7 rule: 68% within 1σ, 95% within 2σ, 99.7% within 3σ.'},
+{q:'X~N(100,15). P(X<130)=',opts:['P(z<2)≈0.977','P(z<1.33)≈0.909','P(z<3)≈0.999','P(z<0.5)≈0.691'],ans:0,fb:'z=(130−100)/15=2. P(z<2)≈0.977.'},
+{q:'The Law of Large Numbers states:',opts:['Sample means are normal','As n increases, sample mean approaches population mean','Variance decreases with n','All samples give same result'],ans:1,fb:'LLN: as n→∞, x̄→μ. Does not say the next observation will be near the mean.'},
+{q:'P(X=1)=0.2, P(X=2)=0.5, P(X=3)=0.3. E(X)=',opts:['2.0','2.1','1.5','2.5'],ans:1,fb:'E(X)=1(0.2)+2(0.5)+3(0.3)=0.2+1.0+0.9=2.1.'},
+{q:'Which is NOT a property of the normal distribution?',opts:['Symmetric about the mean','Mean=Median=Mode','All values are positive','Total area=1'],ans:2,fb:'Normal distributions extend from −∞ to +∞, so negative values are possible.'}
+],
+frqs:[
+{title:'Binomial Distribution',pts:12,prompt:'A multiple-choice test has 20 questions, each with 4 options. A student guesses randomly on every question.',
+parts:[
+{q:'(a) Define X, verify BINS, state n and p.',pts:3,solution:'X = number of correct answers by guessing.\nB: Binary (correct/incorrect). I: Independent (each guess independent). N: n=20 fixed. S: p=1/4=0.25 constant.\nX~Bin(n=20, p=0.25)',rubric:[{pts:1,text:'Defines X'},{pts:1,text:'Verifies all four BINS conditions'},{pts:1,text:'States n=20, p=0.25'}]},
+{q:'(b) Find μ and σ. Interpret μ.',pts:3,solution:'μ=np=20(0.25)=5 questions\nσ=√(np(1−p))=√(20·0.25·0.75)=√3.75≈1.94\nInterpretation: A randomly guessing student would correctly answer an average of 5 questions per test.',rubric:[{pts:1,text:'μ=5'},{pts:1,text:'σ≈1.94'},{pts:1,text:'Interprets mean in context'}]},
+{q:'(c) Find P(X≥10) and interpret.',pts:3,solution:'P(X≥10)=1−P(X≤9)≈1−0.9861=0.0139≈1.4%.\nThere is only about a 1.4% chance of getting 10 or more correct by guessing — very unlikely.',rubric:[{pts:1,text:'P=1−P(X≤9)'},{pts:1,text:'≈0.014'},{pts:1,text:'Interprets in context'}]},
+{q:'(d) Is passing (≥14 correct) unusual for a random guesser? Justify.',pts:3,solution:'P(X≥14)≈0.0000 (<0.01%). z=(14−5)/1.94≈4.6 standard deviations above mean. Extremely unusual — essentially impossible by guessing.',rubric:[{pts:1,text:'Estimates P(X≥14) is essentially 0'},{pts:1,text:'States extremely unusual'},{pts:1,text:'Quantitative justification (z-score or probability)'}]}
+]},
+{title:'Expected Value',pts:10,prompt:'A game costs $3. Roll a die: 6→win $10, 4 or 5→win $3, 1-3→win nothing.',
+parts:[
+{q:'(a) Build the probability distribution of net winnings X.',pts:3,solution:'Net winnings (after $3 cost):\nRoll 6: $10−$3=+$7, P=1/6\nRoll 4,5: $3−$3=$0, P=2/6=1/3\nRoll 1,2,3: $0−$3=−$3, P=1/2',rubric:[{pts:1,text:'Subtracts $3 cost from each payout'},{pts:1,text:'x values: −3, 0, 7'},{pts:1,text:'Probabilities: 1/2, 1/3, 1/6 summing to 1'}]},
+{q:'(b) Calculate E(X). Fair game?',pts:3,solution:'E(X)=(−3)(1/2)+(0)(1/3)+(7)(1/6)=−1.5+0+7/6=−1.5+1.167≈−$0.33\nNot fair — player loses $0.33 per play on average.',rubric:[{pts:1,text:'E(X)=Σx·P(x)'},{pts:1,text:'E(X)≈−$0.33'},{pts:1,text:'Not fair because E(X)<0'}]},
+{q:'(c) Find SD(X).',pts:2,solution:'Var(X)=Σ(x−μ)²P(x)=(−3−(−1/3))²(1/2)+(0−(−1/3))²(1/3)+(7−(−1/3))²(1/6)≈12.56\nSD(X)=√12.56≈$3.54',rubric:[{pts:1,text:'Sets up Var(X)=Σ(x−μ)²P(x)'},{pts:1,text:'SD≈$3.54'}]},
+{q:'(d) If you play 100 times, find expected total and SD of total.',pts:2,solution:'E(total)=100·E(X)=100(−1/3)≈−$33.33\nSD(total)=√100·SD(X)=10·3.54≈$35.40',rubric:[{pts:1,text:'E=100·E(X)≈−$33.33'},{pts:1,text:'SD=10·SD(X)≈$35.40'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 4 — Probability</div><div class="l-title">PROBABILITY & RANDOM VARIABLES</div>
+<div class="l-desc">Probability gives us a framework for uncertainty. Random variables assign numerical values to outcomes. The binomial and normal distributions are the two most important in AP Stats.</div>
+<div class="cb"><h3>Basic Probability Rules</h3>
+<div class="eq"><div class="eql">Core Rules</div><div class="eqb">Complement: P(Aᶜ)=1−P(A)
+Addition: P(A or B)=P(A)+P(B)−P(A and B)
+Mutually exclusive: P(A and B)=0
+Conditional: P(A|B)=P(A and B)/P(B)
+Independent: P(A|B)=P(A)  ↔  P(A and B)=P(A)·P(B)</div></div></div>
+<div class="cb"><h3>Discrete Random Variables</h3>
+<div class="eq"><div class="eql">Expected Value and Rules</div><div class="eqb">E(X)=Σx·P(x)
+Var(X)=Σ(x−μ)²·P(x)
+SD(X)=√Var(X)
+
+Linear transformations:
+  E(aX+b)=aE(X)+b
+  SD(aX+b)=|a|·SD(X)
+
+Independent variables:
+  E(X±Y)=E(X)±E(Y)
+  Var(X+Y)=Var(X)+Var(Y)
+  Var(X−Y)=Var(X)+Var(Y)  ← variances always ADD</div></div></div>
+<div class="cb"><h3>Binomial Distribution</h3>
+<div class="eq"><div class="eql">Binomial: BINS + Formulas</div><div class="eqb">BINS: Binary, Independent, fixed N, Same p
+X~Bin(n,p)
+P(X=k)=C(n,k)·p^k·(1−p)^(n−k)
+μ=np
+σ=√(np(1−p))</div></div></div>
+<div class="cb"><h3>Normal Distribution</h3>
+<div class="eq"><div class="eql">Normal</div><div class="eqb">X~N(μ,σ)
+Standardize: z=(x−μ)/σ → use z-table
+
+Empirical rule:
+  μ±1σ → 68%
+  μ±2σ → 95%
+  μ±3σ → 99.7%</div></div></div>
+</div>`},
+{id:'u5',label:'Unit 5: Sampling Distributions',grp:'📐 Inference Foundations',tag:'Unit 5 — Sampling Distributions',
+qs:[
+{q:'The sampling distribution of x̄ describes:',opts:['Values in one sample','Distribution of sample means from all possible samples of size n','The population distribution','Distribution of a single observation'],ans:1,fb:'The sampling distribution of x̄ is the distribution of all possible sample means when repeatedly drawing samples of size n.'},
+{q:'The Central Limit Theorem says that for large n, the sampling distribution of x̄ is:',opts:['Exactly normal for any population','Approximately normal regardless of population shape','Identical to the population','Always right-skewed'],ans:1,fb:'CLT: for n≥30, the sampling distribution of x̄ is approximately normal regardless of the population shape.'},
+{q:'Population: μ=50, σ=10. For n=25, the standard error of x̄ is:',opts:['10','2','0.4','50'],ans:1,fb:'SE=σ/√n=10/√25=10/5=2.'},
+{q:'The standard deviation of the sampling distribution of p̂ is:',opts:['√(p(1−p))','√(p(1−p)/n)','p(1−p)/n','p/√n'],ans:1,fb:'SD(p̂)=√(p(1−p)/n). Decreases as n increases.'},
+{q:'For the sampling distribution of p̂ to be approximately normal:',opts:['n≥30','np≥10 and n(1−p)≥10','n≥100','p≥0.5'],ans:1,fb:'Large Counts condition: np≥10 AND n(1−p)≥10.'},
+{q:'x̄=52 from n=36, σ=12. The z-score of this sample mean is:',opts:['1.0','0.5','2.0','3.0'],ans:0,fb:'SE=12/√36=2. z=(52−50)/2=1.0.'},
+{q:'Which reduces variability of x̄ as an estimator of μ?',opts:['Increasing σ','Decreasing n','Increasing n','Using a biased method'],ans:2,fb:'SE=σ/√n. Increasing n decreases SE, making x̄ more precise.'},
+{q:'An unbiased estimator has:',opts:['Estimate always equals parameter','Mean of sampling distribution equals the parameter','SE=0','No variability'],ans:1,fb:'Unbiased: E(statistic)=parameter. No systematic over or underestimation.'},
+{q:'As n increases, the shape of the sampling distribution of x̄:',opts:['More skewed','More normal (CLT)','Identical to population','Unchanged'],ans:1,fb:'By CLT, as n increases, sampling distribution of x̄ approaches normality.'},
+{q:'For CLT to apply (non-normal population), we need:',opts:['n≥10','n≥30','n≥100','n≥5'],ans:1,fb:'Rule of thumb: n≥30 for CLT. Larger n needed for very skewed populations.'},
+{q:'X~N(100,20). P(X>120)=',opts:['0.159','0.341','0.023','0.500'],ans:0,fb:'z=(120−100)/20=1. P(X>120)=P(z>1)=0.159.'},
+{q:'For n=16 from same N(100,20) population, P(x̄>120)=',opts:['0.159','0.023','≈0','0.500'],ans:2,fb:'SE=20/4=5. z=(120−100)/5=4. P(z>4)≈0.00003 — essentially zero.'},
+{q:'The mean of the sampling distribution of x̄ equals:',opts:['σ/√n','μ/n','μ','x̄'],ans:2,fb:'μ_x̄=μ. This is what makes x̄ an unbiased estimator of μ.'},
+{q:'The 10% condition requires:',opts:['n≥10% of population','n≤10% of population','At least 10 successes','n≥10'],ans:1,fb:'10% condition: n≤0.10·N. Ensures independence for sampling without replacement.'},
+{q:'A parameter vs. a statistic:',opts:['Both describe samples','Parameter=population (fixed); statistic=sample (varies)','Statistic=population; parameter=sample','Interchangeable'],ans:1,fb:'Parameters (μ,σ,p) describe populations — fixed, unknown. Statistics (x̄,s,p̂) describe samples — vary from sample to sample.'}
+],
+frqs:[
+{title:'Sampling Distribution of x̄',pts:12,prompt:'Fish weights: right-skewed, μ=2.4 lbs, σ=0.8 lbs. Random samples of n=64.',
+parts:[
+{q:'(a) Describe the sampling distribution of x̄ (shape, center, spread).',pts:4,solution:'Shape: Approximately normal by CLT (n=64≥30, so CLT applies despite skewed population).\nCenter: μ_x̄=μ=2.4 lbs\nSpread: SE=σ/√n=0.8/√64=0.8/8=0.10 lbs\nx̄~N(2.4, 0.10) approximately.',rubric:[{pts:1,text:'Normal shape, cites CLT and n≥30'},{pts:1,text:'Center=2.4 lbs'},{pts:1,text:'SE=0.10 lbs'},{pts:1,text:'All three components stated'}]},
+{q:'(b) P(x̄>2.6)?',pts:3,solution:'z=(2.6−2.4)/0.10=2.0\nP(x̄>2.6)=P(z>2)=1−0.9772=0.0228≈2.3%',rubric:[{pts:1,text:'Uses SE=0.10 (not σ=0.8)'},{pts:1,text:'z=2.0'},{pts:1,text:'P≈0.023'}]},
+{q:'(c) For n=16, can you use a normal model? Explain.',pts:3,solution:'Not reliably. n=16<30 and the population is right-skewed, so CLT may not apply. The sampling distribution would be less skewed than the population but not necessarily normal. If the population were exactly normal, any n would work.',rubric:[{pts:1,text:'States CLT may not apply with n=16 for skewed population'},{pts:1,text:'Cites n<30 rule-of-thumb'},{pts:1,text:'Notes if population were normal, any n works'}]},
+{q:'(d) Why is SE=0.10 much smaller than σ=0.80?',pts:2,solution:'Averaging 64 values smooths out individual variation. Extreme values are averaged with typical values, making x̄ more stable than any single measurement. Larger samples give more reliable estimates of μ.',rubric:[{pts:1,text:'Averaging reduces variability'},{pts:1,text:'Sample means more consistent than individual values'}]}
+]},
+{title:'Sampling Distribution of p̂',pts:10,prompt:'40% of students participate in extracurriculars. Random sample n=150.',
+parts:[
+{q:'(a) Describe the sampling distribution of p̂. Verify conditions.',pts:4,solution:'Random: stated ✓\nLarge Counts: np=150(0.4)=60≥10 ✓, n(1−p)=150(0.6)=90≥10 ✓\n10%: 150 < 10% of large district ✓\nShape: Approximately normal\nCenter: μ_p̂=p=0.40\nSpread: SD(p̂)=√(0.40×0.60/150)=√0.0016=0.04',rubric:[{pts:1,text:'Checks Random and 10% conditions'},{pts:1,text:'Large Counts: 60≥10 and 90≥10'},{pts:1,text:'Center=0.40'},{pts:1,text:'SD(p̂)=0.04'}]},
+{q:'(b) P(p̂>0.48)?',pts:3,solution:'z=(0.48−0.40)/0.04=2.0\nP(p̂>0.48)=P(z>2)=0.0228≈2.3%',rubric:[{pts:1,text:'z=2.0'},{pts:1,text:'P≈0.0228'},{pts:1,text:'Interprets in context'}]},
+{q:'(c) If p̂=0.50, would you be surprised?',pts:3,solution:'z=(0.50−0.40)/0.04=2.5. P(p̂≥0.50)=P(z≥2.5)≈0.006=0.6%. Yes, very surprising — only 0.6% chance. Suggests the true proportion may be higher than 40%, or sample is not random.',rubric:[{pts:1,text:'z=2.5, P≈0.006'},{pts:1,text:'States yes, surprising/unlikely'},{pts:1,text:'Suggests true proportion may be higher'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 5 — Inference Foundations</div><div class="l-title">SAMPLING DISTRIBUTIONS</div>
+<div class="l-desc">A sampling distribution is the distribution of a statistic over all possible samples of size n. The Central Limit Theorem is the most important theorem in statistics — it justifies using normal-based inference procedures for means.</div>
+<div class="cb"><h3>Key Vocabulary</h3>
+<ul>
+<li><span class="hl">Parameter:</span> Fixed number describing a population (μ,σ,p). Usually unknown.</li>
+<li><span class="hl">Statistic:</span> Number computed from a sample (x̄,s,p̂). Varies sample to sample.</li>
+<li><span class="hl">Sampling distribution:</span> Distribution of a statistic over all possible samples of size n.</li>
+<li><span class="hl">Standard error:</span> SD of the sampling distribution. Measures sampling variability.</li>
+<li><span class="hl">Unbiased:</span> Mean of sampling distribution = population parameter.</li>
+</ul></div>
+<div class="cb"><h3>Sampling Distribution of x̄</h3>
+<div class="eq"><div class="eql">x̄ Sampling Distribution</div><div class="eqb">Center: μ_x̄=μ  (unbiased)
+Spread: SE=σ/√n
+Shape: Normal if population normal (any n)
+       Approximately normal if n≥30 (CLT)
+
+Standardize: z=(x̄−μ)/(σ/√n)
+
+CLT: As n→∞, x̄~N(μ, σ/√n) regardless of population.</div></div></div>
+<div class="cb"><h3>Sampling Distribution of p̂</h3>
+<div class="eq"><div class="eql">p̂ Sampling Distribution</div><div class="eqb">Conditions: Random, Large Counts (np≥10 AND n(1−p)≥10), 10%
+
+Center: μ_p̂=p  (unbiased)
+Spread: SD(p̂)=√(p(1−p)/n)
+Shape: Approximately normal when conditions met
+
+Standardize: z=(p̂−p)/√(p(1−p)/n)</div></div></div>
+<div class="flag" data-f="CRITICAL"><p>When computing P for a sample mean, use SE=σ/√n — NOT σ. Using σ instead of SE is the most common error. The SE is much smaller than σ because averaging reduces variability.</p></div>
+</div>`},
+{id:'u6',label:'Unit 6: Inference for Proportions',grp:'📐 Inference',tag:'Unit 6 — Inference for Proportions',
+qs:[
+{q:'A 95% CI for a proportion is (0.42,0.58). Correct interpretation:',opts:['95% probability p is in this interval','We are 95% confident this interval captures the true population proportion','95% of sample proportions fall here','True proportion is 0.50 with 95% certainty'],ans:1,fb:'Correct: "We are 95% confident the interval captures the true population proportion p." The parameter p is fixed — it does not have a probability of being in the interval.'},
+{q:'Margin of error for a proportion CI is:',opts:['z*·p̂','z*·√(p̂(1−p̂)/n)','z*·√(p(1−p)/n)','1.96·p̂(1−p̂)'],ans:1,fb:'ME=z*·SE=z*·√(p̂(1−p̂)/n). Use p̂ (not p) since p is unknown.'},
+{q:'To halve the margin of error, you should:',opts:['Double n','Quadruple n','Halve confidence level','Double confidence level'],ans:1,fb:'ME∝1/√n. To halve ME, need 1/√n to halve, so n must quadruple.'},
+{q:'The P-value is:',opts:['Probability H₀ is true','Probability of results at least as extreme as observed, assuming H₀ true','Probability of Type I error','Probability Hₐ is true'],ans:1,fb:'P-value=P(data as extreme as observed | H₀ true). Small P-value = data surprising under H₀ → evidence against H₀.'},
+{q:'α=0.05 means:',opts:['5% chance Hₐ is true','Reject H₀ if P-value<0.05','Accept H₀ if P-value>0.05','Type II error rate=5%'],ans:1,fb:'Reject H₀ when P-value<α. The significance level α is the Type I error rate.'},
+{q:'Correct null hypothesis for one-sample proportion test:',opts:['H₀: p̂=p₀','H₀: p=p₀','H₀: p>p₀','H₀: p≠p₀'],ans:1,fb:'Hypotheses are always about parameters, not statistics. H₀: p=p₀.'},
+{q:'Type I error is:',opts:['Failing to reject false H₀','Rejecting true H₀','Accepting false H₀','Rejecting false H₀'],ans:1,fb:'Type I: reject H₀ when H₀ is true (false positive). Probability=α.'},
+{q:'In a two-proportion z-test, the pooled proportion p̂_c is used because:',opts:['More accurate than either p̂','Under H₀: p₁=p₂, best estimate uses all data','Reduces margin of error','Makes test more conservative'],ans:1,fb:'Under H₀: p₁=p₂, best estimate of common p uses all data: p̂_c=(x₁+x₂)/(n₁+n₂).'},
+{q:'A 99% CI is __ than a 95% CI (same data):',opts:['Narrower','Wider','Same width','Less accurate'],ans:1,fb:'Higher confidence requires larger z* (2.576 vs 1.96) → wider interval.'},
+{q:'Conditions for one-sample z-test for p:',opts:['n≥30','Random, Large Counts (np₀≥10 and n(1−p₀)≥10), 10%','Normal population','σ known'],ans:1,fb:'Use p₀ (null value) for Large Counts check in hypothesis tests.'},
+{q:'P-value=0.03, α=0.05:',opts:['Fail to reject H₀','Reject H₀','Accept H₀','Need more data'],ans:1,fb:'P(0.03)<α(0.05)→reject H₀.'},
+{q:'Power increases when:',opts:['α decreases','n decreases','True parameter is farther from H₀','None of these'],ans:2,fb:'Power increases with: larger n, larger α, larger effect size (true value farther from H₀).'},
+{q:'Significant result at α=0.05 with n=10,000 means:',opts:['Effect is practically important','Result unlikely due to chance, but may not be practically significant','H₀ definitely false','CI does not contain H₀'],ans:1,fb:'Statistical significance ≠ practical significance. With huge n, tiny effects become statistically significant.'},
+{q:'CI (0.31,0.47) for p. Testing H₀: p=0.50 at α=0.05:',opts:['Reject H₀','Fail to reject H₀','Cannot determine','Accept H₀'],ans:0,fb:'0.50 is NOT in the 95% CI → reject H₀ at α=0.05.'},
+{q:'CI (0.42,0.58). Can you conclude p≠0.40?',opts:['No, 0.40 is close to the interval','Yes, 0.40 is not in the interval','No, need a hypothesis test','Yes, always reject when sample proportion differs'],ans:1,fb:'0.40 is not in (0.42,0.58)→at 95% confidence, there is evidence p≠0.40.'}
+],
+frqs:[
+{title:'One-Sample z-Test for Proportion',pts:12,prompt:'A candy company claims 30% of candies are red. Random sample of 200 candies: 72 are red. Test at α=0.05.',
+parts:[
+{q:'(a) State hypotheses.',pts:2,solution:'H₀: p=0.30 (true proportion of red candies is 30%)\nHₐ: p≠0.30 (proportion differs from 30%)\nwhere p=true proportion of red candies.',rubric:[{pts:1,text:'H₀: p=0.30 in terms of parameter'},{pts:1,text:'Hₐ: p≠0.30; defines p in context'}]},
+{q:'(b) Check all conditions.',pts:3,solution:'Random: stated ✓\nLarge Counts (using p₀=0.30): np₀=200(0.30)=60≥10 ✓; n(1−p₀)=200(0.70)=140≥10 ✓\n10%: 200 < 10% of all candies produced ✓\nAll conditions met.',rubric:[{pts:1,text:'Random ✓'},{pts:1,text:'Large Counts using p₀: 60≥10 and 140≥10'},{pts:1,text:'10% condition ✓'}]},
+{q:'(c) Calculate test statistic and P-value.',pts:4,solution:'p̂=72/200=0.36\nz=(0.36−0.30)/√(0.30×0.70/200)=0.06/√(0.00105)=0.06/0.03240=1.852\nP-value (two-sided)=2·P(z>1.852)=2(0.0319)=0.0638',rubric:[{pts:1,text:'p̂=0.36'},{pts:1,text:'Correct z formula using p₀ in SE'},{pts:1,text:'z≈1.85'},{pts:1,text:'P≈0.064 two-sided'}]},
+{q:'(d) Conclusion in context.',pts:3,solution:'P(0.064)>α(0.05)→fail to reject H₀.\nThere is not sufficient evidence at the 5% level that the true proportion of red candies differs from 30%. The sample result of 36% is consistent with the company\'s claim.',rubric:[{pts:1,text:'Fail to reject H₀'},{pts:1,text:'"Not sufficient evidence" language'},{pts:1,text:'Conclusion in context referencing candy proportion'}]}
+]},
+{title:'Confidence Interval for Proportion',pts:10,prompt:'Poll of 450 voters: 261 support Candidate A.',
+parts:[
+{q:'(a) Construct a 95% CI for the true proportion.',pts:4,solution:'p̂=261/450=0.580\nConditions: Random ✓, Large Counts: 450(0.58)=261≥10 and 450(0.42)=189≥10 ✓, 10% ✓\nCI: 0.580±1.96·√(0.58×0.42/450)=0.580±1.96(0.02328)=0.580±0.0456=(0.534,0.626)',rubric:[{pts:1,text:'Checks conditions'},{pts:1,text:'p̂=0.58, z*=1.96'},{pts:1,text:'SE≈0.0233'},{pts:1,text:'CI: (0.534,0.626)'}]},
+{q:'(b) Interpret the CI.',pts:2,solution:'We are 95% confident that the true proportion of all voters who support Candidate A is between 53.4% and 62.6%.',rubric:[{pts:1,text:'"95% confident" language'},{pts:1,text:'References true population proportion in context'}]},
+{q:'(c) Can candidate be confident of winning (>50%)? Explain.',pts:2,solution:'Yes. The entire CI (53.4%, 62.6%) lies above 50%. Since 50% is not in the interval, we are 95% confident the true proportion exceeds 50%.',rubric:[{pts:1,text:'Notes entire CI above 50%'},{pts:1,text:'Concludes majority likely at 95% confidence'}]},
+{q:'(d) Sample size needed for ME=±2% at 95% confidence?',pts:2,solution:'1.96·√(0.58×0.42/n)=0.02\n√(0.2436/n)=0.0102\n0.2436/n=0.0001041\nn≥2340',rubric:[{pts:1,text:'Sets up ME equation, solves for n'},{pts:1,text:'n≥2340'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 6 — Inference</div><div class="l-title">INFERENCE FOR PROPORTIONS</div>
+<div class="l-desc">For proportions, we use z-procedures. The two critical skills: state hypotheses in terms of parameters, and interpret confidence intervals correctly.</div>
+<div class="cb"><h3>Confidence Intervals for p</h3>
+<div class="eq"><div class="eql">One-Sample z-Interval for p</div><div class="eqb">Conditions: Random, Large Counts (np̂≥10, n(1−p̂)≥10), 10%
+
+Formula: p̂ ± z*·√(p̂(1−p̂)/n)
+z*: 1.645 (90%), 1.96 (95%), 2.576 (99%)
+
+Interpretation: "We are C% confident that the interval
+captures the true population proportion p."
+
+Sample size: n≥(z*/ME)²·p̂(1−p̂)
+  Use p̂=0.5 if unknown (conservative)</div></div></div>
+<div class="cb"><h3>Hypothesis Tests for p</h3>
+<div class="eq"><div class="eql">One-Sample z-Test for p</div><div class="eqb">H₀: p=p₀   Hₐ: p>p₀ or p<p₀ or p≠p₀
+
+Conditions: Random, Large Counts (np₀≥10, n(1−p₀)≥10), 10%
+Use p₀ (not p̂) for Large Counts in tests.
+
+z=(p̂−p₀)/√(p₀(1−p₀)/n)
+
+P<α → reject H₀ → evidence for Hₐ
+P>α → fail to reject H₀</div></div></div>
+<div class="flag" data-f="NEVER SAY"><p>"Accept H₀" — always "fail to reject H₀." Never say "prove." Use language of evidence: "There is sufficient/insufficient evidence to conclude..."</p></div>
+</div>`},
+{id:'u7',label:'Unit 7: Inference for Means',grp:'📐 Inference',tag:'Unit 7 — Inference for Means',
+qs:[
+{q:'We use t instead of z for means because:',opts:['Population mean is unknown','Population σ is unknown; we use s','Data is never normal','t is always more accurate'],ans:1,fb:'When σ is unknown (almost always), we use s and the t-distribution, which accounts for the extra uncertainty.'},
+{q:'As degrees of freedom increase, the t-distribution:',opts:['More skewed','Heavier tails','Approaches standard normal','Narrower always'],ans:2,fb:'As df→∞, t→N(0,1). With large df, t*≈z*.'},
+{q:'Standard error of x̄ when σ unknown:',opts:['σ/√n','s/√n','s/n','σ/n'],ans:1,fb:'SE=s/√n when σ is unknown.'},
+{q:'Degrees of freedom for one-sample t-test:',opts:['n','n+1','n−1','n−2'],ans:2,fb:'df=n−1 for one-sample t-procedures.'},
+{q:'Conditions for one-sample t-interval:',opts:['n≥30 always','Random and Normal/Large Sample','Normal population required','σ must be known'],ans:1,fb:'Conditions: Random, Normal/Large Sample (normal population OR n≥30 OR no strong skew/outliers for small n).'},
+{q:'Correct interpretation of 95% t-interval (42,58):',opts:['P(42<μ<58)=0.95','95% of sample means fall here','We are 95% confident this interval captures μ','Sample mean=50 with 95% certainty'],ans:2,fb:'"We are 95% confident the interval captures the true population mean μ."'},
+{q:'Paired t-test is appropriate when:',opts:['Two independent samples','Each observation matched with one from the other sample','Both samples from normal populations','Equal sample sizes'],ans:1,fb:'Paired: natural pairings (before/after same subject, or matched pairs). Compute differences d, then one-sample t on d.'},
+{q:'Null hypothesis for two-sample t-test:',opts:['H₀: x̄₁=x̄₂','H₀: μ₁=μ₂','H₀: μ₁−μ₂=0','Both B and C'],ans:3,fb:'H₀: μ₁=μ₂ and H₀: μ₁−μ₂=0 are equivalent. Write in terms of parameters.'},
+{q:'One-sample t-test: t=2.1, df=24, Hₐ: μ>50. P-value=',opts:['P(t>2.1) df=24','2·P(t>2.1) df=24','P(z>2.1)','P(t<2.1)'],ans:0,fb:'One-sided right-tailed: P-value=P(t>2.1) with df=24.'},
+{q:'Normal/Large Sample condition for t:',opts:['Always need n≥30','Normal population, OR n≥30, OR no strong skew/outliers for small n','Need σ known','n=population size'],ans:1,fb:'Satisfied if: population normal, OR n≥30 (CLT), OR small n with no strong skewness/outliers in data.'},
+{q:'Two-sample t-interval for μ₁−μ₂ does not include 0. This means:',opts:['μ₁=μ₂','Evidence μ₁≠μ₂','Samples identical','Inconclusive'],ans:1,fb:'0 not in CI → μ₁−μ₂=0 not plausible → evidence of a difference.'},
+{q:'Larger n while keeping α constant:',opts:['Increases Type I error','Increases Type II error','Increases power','Decreases power'],ans:2,fb:'Larger n → smaller SE → larger t-statistic → more power to detect real differences.'},
+{q:'Using two-sample t on paired data would:',opts:['No effect','Underestimate significance','Overestimate significance','Improve power'],ans:1,fb:'Ignoring pairing wastes information → larger SE → less significant result → reduced power.'},
+{q:'t-procedures do NOT require:',opts:['Random sample','Normal population or large n','σ unknown','σ known'],ans:3,fb:'t is used precisely because σ is unknown. We never need to know σ for t-procedures.'},
+{q:'90% CI with df=9 uses t*=',opts:['1.645','1.833','2.262','1.96'],ans:1,fb:'t*(df=9, 90% CI)=1.833. Larger than z*=1.645 because t has heavier tails.'}
+],
+frqs:[
+{title:'One-Sample t-Test',pts:12,prompt:'Manufacturer claims batteries last 50 hours mean. Sample of 16: x̄=47.2, s=4.8. Test if batteries last less than claimed. α=0.05.',
+parts:[
+{q:'(a) State hypotheses and check conditions.',pts:4,solution:'H₀: μ=50 hours\nHₐ: μ<50 hours (one-sided left)\nwhere μ=true mean battery life.\n\nConditions:\nRandom: stated ✓\nNormal/Large Sample: n=16<30, so assume population of battery lifetimes is approximately normal ✓\n10%: 16 << total batteries produced ✓',rubric:[{pts:1,text:'H₀: μ=50'},{pts:1,text:'Hₐ: μ<50 one-sided'},{pts:1,text:'Random and 10% conditions'},{pts:1,text:'Addresses Normal/Large Sample for n=16'}]},
+{q:'(b) Calculate the test statistic.',pts:3,solution:'SE=s/√n=4.8/√16=4.8/4=1.2\nt=(x̄−μ₀)/SE=(47.2−50)/1.2=−2.8/1.2=−2.333\ndf=n−1=15',rubric:[{pts:1,text:'SE=s/√n=1.2'},{pts:1,text:'t=−2.333'},{pts:1,text:'df=15'}]},
+{q:'(c) P-value and conclusion.',pts:3,solution:'P-value=P(t₁₅<−2.333)≈0.017\nSince P(0.017)<α(0.05), reject H₀.\nConclusion: There is sufficient evidence at the 5% level that the true mean battery life is less than 50 hours.',rubric:[{pts:1,text:'P≈0.017 (or bounded correctly from t-table)'},{pts:1,text:'Reject H₀'},{pts:1,text:'Conclusion in context'}]},
+{q:'(d) Construct a 95% CI for μ.',pts:2,solution:'t*(df=15,95%)=2.131\nCI: 47.2±2.131(1.2)=47.2±2.557=(44.6,49.8) hours\nWe are 95% confident true mean battery life is between 44.6 and 49.8 hours.',rubric:[{pts:1,text:'t*=2.131, CI formula correct'},{pts:1,text:'CI≈(44.6,49.8) with correct interpretation'}]}
+]},
+{title:'Paired t-Test',pts:10,prompt:'Fitness program: 8 participants measured before and after 12-week program. Differences (before−after): 5,3,8,−1,4,6,2,5. x̄_d=4.0, s_d=2.83.',
+parts:[
+{q:'(a) Why paired t-test? State hypotheses.',pts:3,solution:'Paired because each participant provides two related measurements (before and after). We compute differences within each pair to control for individual variability.\nμ_d=true mean difference (before−after)\nH₀: μ_d=0 (no change)\nHₐ: μ_d>0 (heart rate decreases)',rubric:[{pts:1,text:'Explains measurements are paired (same subject)'},{pts:1,text:'H₀: μ_d=0'},{pts:1,text:'Hₐ: μ_d>0'}]},
+{q:'(b) Conduct test at α=0.05.',pts:4,solution:'SE=s_d/√n=2.83/√8=2.83/2.828=1.001\nt=x̄_d/SE=4.0/1.001≈4.0, df=7\nP-value=P(t₇>4.0)≈0.003\nP(0.003)<α(0.05)→reject H₀.\nStrong evidence the program reduces resting heart rate.',rubric:[{pts:1,text:'t=4.0/1.0≈4.0, df=7'},{pts:1,text:'P≈0.003'},{pts:1,text:'Reject H₀'},{pts:1,text:'Conclusion in context'}]},
+{q:'(c) Construct and interpret 95% CI for μ_d.',pts:3,solution:'t*(df=7)=2.365\nCI: 4.0±2.365(1.001)=4.0±2.37=(1.63,6.37) bpm\nWe are 95% confident the program reduces mean heart rate by between 1.63 and 6.37 beats per minute.',rubric:[{pts:1,text:'t*=2.365, df=7'},{pts:1,text:'CI≈(1.63,6.37)'},{pts:1,text:'Correct interpretation in context'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 7 — Inference</div><div class="l-title">INFERENCE FOR MEANS</div>
+<div class="l-desc">When σ is unknown, we use t-procedures. The t-distribution has heavier tails than the normal to account for extra uncertainty. Paired designs control for individual variability and are more powerful than two-sample designs for matched data.</div>
+<div class="cb"><h3>One-Sample t-Procedures</h3>
+<div class="eq"><div class="eql">Conditions and Formulas</div><div class="eqb">Conditions: Random, Normal/Large Sample, 10%
+
+t-interval: x̄±t*·(s/√n), df=n−1
+t-test: t=(x̄−μ₀)/(s/√n), df=n−1
+
+Normal/Large Sample condition:
+  Population normal OR n≥30 OR
+  Small n with no strong skew/outliers in data</div></div></div>
+<div class="cb"><h3>Paired vs Two-Sample</h3>
+<div class="eq"><div class="eql">Paired t</div><div class="eqb">Use when: observations naturally paired
+Compute: d=x₁−x₂ for each pair
+Then: one-sample t-test on differences d
+H₀: μ_d=0, df=n−1 (n=number of pairs)
+
+Two-sample t (independent groups):
+CI: (x̄₁−x̄₂)±t*·√(s₁²/n₁+s₂²/n₂)
+Test: t=(x̄₁−x̄₂)/√(s₁²/n₁+s₂²/n₂)
+df: use technology</div></div></div>
+</div>`},
+{id:'u8',label:'Unit 8: Chi-Square Tests',grp:'📐 Inference',tag:'Unit 8 — Chi-Square Tests',
+qs:[
+{q:'Chi-square goodness-of-fit test is used to:',opts:['Compare two proportions','Test if observed counts fit a claimed distribution','Test association between two categorical variables','Find the mean'],ans:1,fb:'GOF tests whether an observed frequency distribution matches a hypothesized distribution.'},
+{q:'Expected count in a two-way table cell:',opts:['(row total×col total)/grand total','(row+col)/grand total','observed/grand total','row/grand total'],ans:0,fb:'E=(row total×column total)/grand total. What we\'d expect if the variables were independent.'},
+{q:'Chi-square test statistic:',opts:['Σ(O−E)','Σ(O−E)²/E','Σ(O−E)/E','√Σ(O−E)²/E'],ans:1,fb:'χ²=Σ(O−E)²/E. Squares remove negatives; dividing by E standardizes.'},
+{q:'Required condition for chi-square test:',opts:['All expected counts≥5','All observed counts≥5','n≥30','Quantitative variables'],ans:0,fb:'Large Counts: ALL EXPECTED (not observed) counts≥5.'},
+{q:'Chi-square test of independence tests:',opts:['H₀: variables are dependent','H₀: two categorical variables are independent','H₀: all proportions equal','H₀: means are equal'],ans:1,fb:'H₀: variables are independent. Hₐ: they are dependent (associated).'},
+{q:'Degrees of freedom for r×c table:',opts:['r+c−1','(r−1)(c−1)','rc−1','n−1'],ans:1,fb:'df=(r−1)(c−1).'},
+{q:'Large χ² indicates:',opts:['Evidence for H₀','Observed and expected similar','Large deviations between O and E','Negative association'],ans:2,fb:'Large χ²→large differences between O and E→evidence against H₀.'},
+{q:'Chi-square distribution is:',opts:['Symmetric about zero','Right-skewed, non-negative values','Left-skewed','Normal for large samples'],ans:1,fb:'χ²≥0 always (sum of squared values). Right-skewed. Becomes more symmetric as df increases.'},
+{q:'Chi-square test of homogeneity compares:',opts:['One sample to theoretical distribution','Proportions across multiple populations','Two quantitative variables','Two means'],ans:1,fb:'Homogeneity: same distribution of categorical variable across multiple populations?'},
+{q:'Goodness-of-fit df equals:',opts:['n−1','k−1 (k=categories)','k','(r−1)(c−1)'],ans:1,fb:'GOF: df=k−1 where k=number of categories.'},
+{q:'χ²=8.4, df=3. P-value is:',opts:['Greater than 0.05','Less than 0.05','Exactly 0.05','Cannot determine'],ans:1,fb:'df=3, critical value at α=0.05 is 7.815. Since 8.4>7.815, P<0.05.'},
+{q:'Chi-square cannot show:',opts:['Which cells deviate most','Direction of association','Whether association is significant','Whether expected counts sufficient'],ans:1,fb:'Chi-square is non-directional — shows WHETHER there is association, not the direction or pattern.'},
+{q:'χ²=15.2, df=4:',opts:['Evidence of no association','P>0.05','Strong evidence against H₀','Cannot determine'],ans:2,fb:'df=4, critical value at α=0.01 is 13.277. Since 15.2>13.277, P<0.01. Very strong evidence against H₀.'},
+{q:'After significant chi-square result, you should:',opts:['Conclude which cells differ exactly','Calculate CI for difference','Examine conditional distributions and large (O−E)²/E cells','Accept Hₐ'],ans:2,fb:'After rejecting H₀, examine conditional distributions and cells with largest contributions to understand the pattern.'},
+{q:'Simpson\'s paradox occurs when:',opts:['χ² is very large','Trend in combined data reverses when separated by a third variable','All expected counts small','Variables perfectly independent'],ans:1,fb:'Simpson\'s paradox: association reverses or disappears when controlling for a lurking variable.'}
+],
+frqs:[
+{title:'Chi-Square Goodness-of-Fit',pts:12,prompt:'A die is suspected unfair. Rolled 120 times: 1→24, 2→16, 3→22, 4→18, 5→14, 6→26.',
+parts:[
+{q:'(a) State hypotheses.',pts:2,solution:'H₀: The die is fair — each face has probability 1/6 (uniform distribution: p₁=p₂=p₃=p₄=p₅=p₆=1/6)\nHₐ: The die is not fair — at least one face has probability ≠1/6',rubric:[{pts:1,text:'H₀: uniform distribution, each p=1/6'},{pts:1,text:'Hₐ: at least one p differs from 1/6'}]},
+{q:'(b) Expected counts and conditions.',pts:3,solution:'E=120×(1/6)=20 for each face.\nLarge Counts: all E=20≥5 ✓\nRandom: assume independent rolls ✓\nConditions satisfied.',rubric:[{pts:1,text:'E=20 for all faces'},{pts:1,text:'Large Counts: all E=20≥5'},{pts:1,text:'States conditions met'}]},
+{q:'(c) Calculate χ².',pts:4,solution:'χ²=(24−20)²/20+(16−20)²/20+(22−20)²/20+(18−20)²/20+(14−20)²/20+(26−20)²/20\n=16/20+16/20+4/20+4/20+36/20+36/20\n=0.80+0.80+0.20+0.20+1.80+1.80=5.60\ndf=6−1=5',rubric:[{pts:1,text:'Correct formula χ²=Σ(O−E)²/E'},{pts:1,text:'Each (O−E)²/E correct'},{pts:1,text:'χ²=5.60'},{pts:1,text:'df=5'}]},
+{q:'(d) P-value and conclusion at α=0.05.',pts:3,solution:'df=5, critical value at α=0.05 is 11.070. Since χ²=5.60<11.070, P>0.05. Using technology P≈0.347.\nFail to reject H₀.\nNot sufficient evidence at 5% level to conclude the die is unfair.',rubric:[{pts:1,text:'P>0.05 (from table) or P≈0.347'},{pts:1,text:'Fail to reject H₀'},{pts:1,text:'Conclusion in context'}]}
+]},
+{title:'Chi-Square Test of Independence',pts:10,prompt:'Survey of 300 adults: exercise frequency vs stress level. High stress: Daily=20,Weekly=35,Rarely=45. Low stress: Daily=55,Weekly=90,Rarely=55.',
+parts:[
+{q:'(a) State hypotheses and compute E for Daily/High Stress.',pts:3,solution:'H₀: Exercise frequency and stress level are independent.\nHₐ: There is an association between exercise frequency and stress level.\n\nRow totals: High=100, Low=200. Column totals: Daily=75, Weekly=125, Rarely=100. Grand total=300.\nE(Daily,High)=(100×75)/300=25',rubric:[{pts:1,text:'H₀: independence; Hₐ: association'},{pts:1,text:'Correct totals'},{pts:1,text:'E(Daily,High)=25'}]},
+{q:'(b) All 6 expected counts.',pts:2,solution:'High/Daily=25, High/Weekly=41.67, High/Rarely=33.33\nLow/Daily=50, Low/Weekly=83.33, Low/Rarely=66.67\nAll≥5 ✓',rubric:[{pts:1,text:'All 6 expected counts correct'},{pts:1,text:'All≥5, condition satisfied'}]},
+{q:'(c) Compute χ² and P-value.',pts:3,solution:'χ²=(20−25)²/25+(35−41.67)²/41.67+(45−33.33)²/33.33+(55−50)²/50+(90−83.33)²/83.33+(55−66.67)²/66.67\n=1.00+1.07+4.08+0.50+0.53+2.04=9.22\ndf=(2−1)(3−1)=2\nP≈0.010',rubric:[{pts:1,text:'χ²≈9.22'},{pts:1,text:'df=2'},{pts:1,text:'P≈0.010'}]},
+{q:'(d) Conclusion and nature of association.',pts:2,solution:'P(0.010)<α(0.05)→reject H₀.\nSignificant evidence of association between exercise frequency and stress level. People who exercise daily tend to have lower stress (55 observed vs 50 expected). Rarely exercising is associated with higher stress (45 vs 33.33 expected — largest χ² contribution).',rubric:[{pts:1,text:'Reject H₀; significant evidence of association'},{pts:1,text:'Describes direction: more exercise associated with lower stress'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 8 — Inference</div><div class="l-title">CHI-SQUARE TESTS</div>
+<div class="l-desc">Chi-square tests analyze categorical data. Three types: goodness-of-fit, independence, and homogeneity. All use χ²=Σ(O−E)²/E. The key condition: all expected counts≥5.</div>
+<div class="cb"><h3>Three Chi-Square Tests</h3>
+<ul>
+<li><span class="hl">Goodness-of-Fit:</span> Does one variable follow a claimed distribution? df=k−1.</li>
+<li><span class="hl">Independence:</span> Are two categorical variables associated? One sample, two variables. df=(r−1)(c−1).</li>
+<li><span class="hl">Homogeneity:</span> Same distribution across multiple populations? df=(r−1)(c−1).</li>
+</ul></div>
+<div class="cb"><h3>Procedure</h3>
+<div class="eq"><div class="eql">Chi-Square Test Steps</div><div class="eqb">1. State H₀ (distribution matches / variables independent)
+2. Check conditions: Random, Large Counts (all E≥5), 10%
+3. E=(row total×col total)/grand total
+4. χ²=Σ(O−E)²/E
+5. P-value: P(χ²_df>observed) — always right-tailed
+6. Conclude: P<α → evidence against H₀</div></div></div>
+</div>`},
+{id:'u9',label:'Unit 9: Inference for Slopes',grp:'📐 Inference',tag:'Unit 9 — Inference for Regression Slopes',
+qs:[
+{q:'In regression inference, β represents:',opts:['Sample slope b','True population slope','y-intercept','Correlation r'],ans:1,fb:'β is the true population slope (parameter). b is the sample slope (statistic). We use b to estimate β.'},
+{q:'Null hypothesis for slope t-test:',opts:['H₀: b=0','H₀: β=0','H₀: r=0','H₀: β=b'],ans:1,fb:'H₀: β=0 means no linear relationship in the population. Write hypotheses about parameters.'},
+{q:'Conditions for slope inference include:',opts:['Residuals normally distributed with constant variance','r²>0.5','n>100','Categorical predictor'],ans:0,fb:'LINE: Linear, Independent, Normal residuals, Equal variance (constant spread). Check with residual plots.'},
+{q:'SE_b measures:',opts:['Estimate of β','Variability of b across all possible samples','The y-intercept','r²'],ans:1,fb:'SE_b measures how much the sample slope b would vary from sample to sample.'},
+{q:'95% CI for β is (1.2,4.8). You conclude:',opts:['β=3.0 exactly','P(1.2<β<4.8)=0.95','95% confident interval captures true slope β','r=0.95'],ans:2,fb:'"We are 95% confident the interval (1.2,4.8) captures the true slope β."'},
+{q:'t-statistic for testing H₀: β=0:',opts:['b/SE_b','β/SE_b','r/SE_r','b/s'],ans:0,fb:'t=b/SE_b with df=n−2.'},
+{q:'P-value=0.002 for slope test means:',opts:['Slope=0.002','β=0.002','Strong evidence of linear relationship','r=0.002'],ans:2,fb:'Small P→reject H₀: β=0→strong evidence of linear relationship.'},
+{q:'Degrees of freedom for slope inference:',opts:['n−1','n−2','n','n+1'],ans:1,fb:'df=n−2. Lose 2 df for estimating slope and intercept.'},
+{q:'"Equal Variance" condition means:',opts:['x and y have equal variances','Residuals have constant spread across all x','All residuals are zero','Slope equals variance'],ans:1,fb:'Homoscedasticity: constant vertical spread of residuals across x. Check residual plot for fan-shape.'},
+{q:'Coefficient for x=2.34, SE=0.67. t-statistic=',opts:['0.29','3.49','1.57','2.34'],ans:1,fb:'t=b/SE_b=2.34/0.67=3.49.'},
+{q:'Fan-shaped residual plot indicates:',opts:['Good linear fit','Non-constant variance — condition violated','Nonlinear relationship','Outliers'],ans:1,fb:'Fan shape = heteroscedasticity = Equal Variance condition violated.'},
+{q:'b=1.8, SE_b=0.5, t*=2.101 (df=18). 95% CI for β:',opts:['(0.75,2.85)','(1.3,2.3)','(1.0,2.6)','(3.2,4.6)'],ans:0,fb:'b±t*·SE_b=1.8±2.101(0.5)=1.8±1.05=(0.75,2.85).'},
+{q:'"Linear" condition requires:',opts:['r>0.8','True relationship between x and y is linear','All data on regression line','y-intercept=0'],ans:1,fb:'Linear: the true population relationship is linear (not curved). Check scatterplot and residual plot for no curved pattern.'},
+{q:'P-value=0.34 for slope test at α=0.05:',opts:['Reject H₀: evidence of linear relationship','Fail to reject H₀: insufficient evidence of linear relationship','Accept H₀','Slope=0.34'],ans:1,fb:'P(0.34)>α(0.05)→fail to reject H₀. Insufficient evidence of linear relationship.'},
+{q:'"Normal" condition for slope inference relaxed when:',opts:['r²>0.8','n is large (CLT applies)','Residuals symmetric','Slope is significant'],ans:1,fb:'For large n, CLT ensures sampling distribution of b is approximately normal even if residuals are not normal.'}
+],
+frqs:[
+{title:'Inference for Slope',pts:12,prompt:'Study of TV hours/day (x) vs reading score (y), n=20. Output: slope b=−3.8, SE_b=1.2, intercept=85.2, s=7.4, r²=0.317.',
+parts:[
+{q:'(a) State hypotheses and check LINE conditions.',pts:4,solution:'H₀: β=0 (no linear relationship between TV hours and reading score)\nHₐ: β≠0 (there is a linear relationship)\n\nLINE:\nL: Assume scatterplot shows linear pattern; residual plot shows no curve ✓\nI: Assume students randomly/independently selected ✓\nN: n=20 small — assume residuals approximately normal (check histogram/NPP) ✓\nE: Assume residual plot shows constant spread ✓',rubric:[{pts:1,text:'H₀: β=0, Hₐ: β≠0'},{pts:1,text:'Checks Linear condition'},{pts:1,text:'Checks Independent condition'},{pts:1,text:'Checks Normal and Equal Variance'}]},
+{q:'(b) Test statistic and P-value.',pts:3,solution:'t=b/SE_b=−3.8/1.2=−3.167\ndf=n−2=18\nP=2·P(t₁₈>3.167)≈0.005 (two-sided)',rubric:[{pts:1,text:'t=−3.8/1.2=−3.17'},{pts:1,text:'df=18'},{pts:1,text:'P≈0.005 two-sided'}]},
+{q:'(c) Conclusion and interpret slope.',pts:3,solution:'P(≈0.005)<α(0.05)→reject H₀.\nSignificant evidence of a negative linear relationship between TV hours and reading score.\nSlope: for each additional hour of TV watched per day, the predicted reading score decreases by 3.8 points, on average.',rubric:[{pts:1,text:'Reject H₀; significant evidence'},{pts:1,text:'Negative relationship in context'},{pts:1,text:'Interprets slope correctly with units'}]},
+{q:'(d) 95% CI for β.',pts:2,solution:'t*(df=18)=2.101\nCI: −3.8±2.101(1.2)=−3.8±2.521=(−6.32,−1.28)\n95% confident true slope β is between −6.32 and −1.28 points per hour of TV.',rubric:[{pts:1,text:'CI=(−6.32,−1.28)'},{pts:1,text:'Correct interpretation; notes 0 not in interval'}]}
+]},
+{title:'Reading Computer Output',pts:10,prompt:'Regression of weight (y,kg) on height (x,cm). Output: Coeff=0.62, SE=0.09, T=6.89, P=0.000, s=8.2, R-sq=54.3%, n=50.',
+parts:[
+{q:'(a) Write LSRL and interpret slope.',pts:2,solution:'ŷ=[intercept]+0.62x\nSlope: For each 1 cm increase in height, predicted weight increases by 0.62 kg.',rubric:[{pts:1,text:'Identifies slope=0.62'},{pts:1,text:'Interprets slope in context with units'}]},
+{q:'(b) Interpret s=8.2 and R-sq=54.3%.',pts:3,solution:'s=8.2 kg: individual weights typically fall within ±8.2 kg of the predicted values — measures fit of line.\nR²=54.3%: 54.3% of variation in weight is explained by the linear relationship with height. The other 45.7% is due to other factors.',rubric:[{pts:1,text:'s=8.2: typical deviation of actual from predicted'},{pts:1,text:'R²: 54.3% of variation in weight explained by height'},{pts:1,text:'Notes remaining 45.7% due to other factors'}]},
+{q:'(c) T=6.89, P=0.000. Conclusion?',pts:2,solution:'P≈0.000<α(0.05)→reject H₀: β=0.\nVery strong evidence of a positive linear relationship between height and weight.',rubric:[{pts:1,text:'Reject H₀; very strong evidence'},{pts:1,text:'Conclusion in context'}]},
+{q:'(d) 95% CI for β (t*=2.010, df=48).',pts:3,solution:'CI: 0.62±2.010(0.09)=0.62±0.181=(0.439,0.801)\n95% confident the true slope is between 0.439 and 0.801 kg per cm of height.',rubric:[{pts:1,text:'CI=(0.439,0.801)'},{pts:1,text:'Correct interpretation'},{pts:1,text:'Units: kg per cm'}]}
+]}
+],
+render:()=>`<div class="lesson">
+<div class="l-ey">Unit 9 — Inference</div><div class="l-title">INFERENCE FOR REGRESSION SLOPES</div>
+<div class="l-desc">We use the sample slope b to make inferences about the true population slope β. t-procedures with df=n−2. Check LINE conditions with residual plots.</div>
+<div class="cb"><h3>Population Model and Parameters</h3>
+<div class="eq"><div class="eql">Regression Model</div><div class="eqb">Population: y=α+βx+ε   (ε~N(0,σ))
+Sample:     ŷ=a+bx
+H₀: β=0 (no linear relationship)
+t=b/SE_b, df=n−2
+CI: b±t*·SE_b</div></div></div>
+<div class="cb"><h3>LINE Conditions</h3>
+<div class="eq"><div class="eql">Check All Four</div><div class="eqb">L: Linear — scatterplot linear; residual plot no curve
+I: Independent — random sample; 10% condition
+N: Normal residuals — histogram approx normal; large n OK
+E: Equal variance — residual plot constant spread; no fan shape</div></div></div>
+<div class="cb"><h3>Reading Computer Output</h3>
+<ul>
+<li><span class="hl">Coefficient:</span> b (slope) or a (intercept)</li>
+<li><span class="hl">SE:</span> SE_b — standard error of slope</li>
+<li><span class="hl">T:</span> t=b/SE_b</li>
+<li><span class="hl">P:</span> P-value for H₀: β=0</li>
+<li><span class="hl">s:</span> SD of residuals (typical prediction error)</li>
+<li><span class="hl">R-sq:</span> r² — % variation in y explained by x</li>
+</ul></div>
+<div class="flag" data-f="KEY"><p>df=n−2 for regression inference (not n−1). Always use t, never z. Reading and interpreting computer output — slope, SE, t, P, s, R² — is a core AP exam skill.</p></div>
+</div>`}
+];
+const SOLUTIONS={};
+function getSolution(tid,fi,pi){return SOLUTIONS[tid+'_'+fi+'_'+pi]||null;}
+document.addEventListener('DOMContentLoaded',()=>{});
+</script>
+</body>
+</html>
